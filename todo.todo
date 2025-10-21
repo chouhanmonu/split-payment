@@ -1,0 +1,6 @@
+Security:
+  ☐ Implement rate limiting
+
+Others:
+  ☐ add logger
+  ☐ env for environments
