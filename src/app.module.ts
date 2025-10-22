@@ -11,7 +11,7 @@ import { getEnvironment, isProduction } from './utility/env.util';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.${getEnvironment()}.env`,
+      envFilePath: `.env.${getEnvironment()}`,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
