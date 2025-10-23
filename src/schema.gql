@@ -1,0 +1,25 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  getUserById(id: Float!): UserModel!
+}
+
+type UserModel {
+  created_at: DateTime!
+  default_currency: String!
+  deleted_at: DateTime
+  email: String!
+  id: Int!
+  name: String
+  phone: String
+  profile_picture_url: String
+  updated_at: DateTime!
+  userid: String!
+}
