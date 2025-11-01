@@ -1,6 +1,10 @@
 Security:
   ☐ Implement rate limiting
+  ☐ add max no. of login attempts for login form to prevent brute-force attack & add captcha support
+    Rate limit and throttle logins per IP and per account.
+    Many failed logins for the same account or IP over a short time. (track failed login attempts)
 
 Others:
-  ☐ add logger
-  ☐ env for environments
+  ✔ add logger @done (11/1/2025, 4:27:35 PM)
+  ✔ env for environments @done (10/22/2025, 8:47:34 PM)
+  ☐ use swagger for api documentation

@@ -2,13 +2,57 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateUserInput {
+  default_currency: String
+  email: String!
+  name: String!
+  password: String!
+  phone: String
+  profile_picture_url: String
+  userid: String
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
+input FindUsersInput {
+  order: UserOrderInput
+  skip: Float
+  take: Float
+  where: UserWhereInput
+}
+
+type Mutation {
+  createUser(newUserInput: CreateUserInput!): UserModel!
+  deleteUser(email: String!, password: String!): UserModel!
+  restoreUser(email: String!): UserModel!
+  updateUser(id: Float!, updateUserInput: UpdateUserInput!): UserModel!
+}
+
 type Query {
   getUserById(id: Float!): UserModel!
+  getUsers(findUserInput: FindUsersInput!): [UserModel!]!
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  startsWith: String
+}
+
+input UpdateUserInput {
+  default_currency: String
+  email: String
+  name: String
+  password: String
+  phone: String
+  profile_picture_url: String
+  userid: String
 }
 
 type UserModel {
@@ -17,9 +61,21 @@ type UserModel {
   deleted_at: DateTime
   email: String!
   id: Int!
-  name: String
+  name: String!
   phone: String
   profile_picture_url: String
   updated_at: DateTime!
   userid: String!
+}
+
+input UserOrderInput {
+  created_at: String
+  name: String
+}
+
+input UserWhereInput {
+  email: StringFilter
+  name: StringFilter
+  phone: StringFilter
+  userid: StringFilter
 }

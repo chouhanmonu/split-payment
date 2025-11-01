@@ -18,13 +18,13 @@ export class User {
   @Column({ type: 'varchar', length: 30, unique: true })
   userid: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'varchar', length: 100 })
   name: string;
 
   @Column({ type: 'varchar', length: 254, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'varchar', length: 255 })
   password: string;
 
   @Column({ type: 'varchar', length: 512, nullable: true })
