@@ -36,6 +36,9 @@ export class User {
   @Column({ type: 'char', length: 3, default: 'USD' })
   default_currency: string;
 
+  @Column({ type: 'char', length: 36, nullable: true })
+  refresh_token_jti: string | null;
+
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 

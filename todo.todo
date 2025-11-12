@@ -8,3 +8,6 @@ Others:
   ✔ add logger @done (11/1/2025, 4:27:35 PM)
   ✔ env for environments @done (10/22/2025, 8:47:34 PM)
   ☐ use swagger for api documentation
+
+Also:
+  enable row level security in pg

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { FindManyOptions, Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -13,21 +14,21 @@ import { UpdateUserInput } from './dto/updateUser.input';
 import { UserModel } from './models/user.model';
 import { FindUsersInput } from './dto/getUsers.input';
 import { buildWhere } from 'src/utility/input-types';
+import { JWT_HASH_SALT } from 'src/utility/conts';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
+    private readonly userRepository: Repository<User>,
   ) {}
 
-  private static async hashPassord(password: string) {
-    const salt = await bcrypt.genSalt(10);
-    return bcrypt.hash(password, salt);
+  private static hashPassord(password: string) {
+    return bcrypt.hash(password, JWT_HASH_SALT);
   }
 
   findOne(id: number) {
-    return this.usersRepository.findOneBy({
+    return this.userRepository.findOneBy({
       id,
     });
   }
@@ -40,7 +41,7 @@ export class UsersService {
     if (options?.take) findOptions.take = options.take;
     if (options?.skip) findOptions.skip = options.skip;
 
-    return this.usersRepository.find(findOptions);
+    return this.userRepository.find(findOptions);
   }
 
   async create(newUserInput: CreateUserInput) {
@@ -53,8 +54,8 @@ export class UsersService {
       newUserInput.password,
     );
 
-    const userEntity = this.usersRepository.create(newUserInput);
-    return this.usersRepository.save(userEntity);
+    const userEntity = this.userRepository.create(newUserInput);
+    return this.userRepository.save(userEntity);
   }
 
   async update(id: number, updateUserInput: UpdateUserInput) {
@@ -63,14 +64,14 @@ export class UsersService {
         updateUserInput.password,
       );
 
-    const user = await this.usersRepository.preload({ id, ...updateUserInput });
+    const user = await this.userRepository.preload({ id, ...updateUserInput });
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
 
-    return this.usersRepository.save(user);
+    return this.userRepository.save(user);
   }
 
   async delete(email: string, password: string) {
-    const user = await this.usersRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { email },
       withDeleted: true,
     });
@@ -78,13 +79,13 @@ export class UsersService {
       throw new NotFoundException(`User with email ${email} not found`);
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) throw new BadRequestException();
+    if (!match) throw new UnauthorizedException();
 
-    return this.usersRepository.softRemove(user);
+    return this.userRepository.softRemove(user);
   }
 
   async restore(email: string) {
-    const user = await this.usersRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         email,
       },
@@ -93,6 +94,6 @@ export class UsersService {
     if (!user)
       throw new NotFoundException(`User with email ${email} not found`);
 
-    return this.usersRepository.recover(user);
+    return this.userRepository.recover(user);
   }
 }

@@ -17,6 +17,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type ExpiresIn {
+  refreshToken: Float!
+  token: Float!
+}
+
 input FindUsersInput {
   order: UserOrderInput
   skip: Float
@@ -24,16 +29,45 @@ input FindUsersInput {
   where: UserWhereInput
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type LoginResponse {
+  expiresIn: ExpiresIn!
+  refreshToken: String!
+  token: String!
+  user: UserModel!
+}
+
+type LogoutResponse {
+  message: String!
+}
+
 type Mutation {
   createUser(newUserInput: CreateUserInput!): UserModel!
   deleteUser(email: String!, password: String!): UserModel!
+  login(loginInput: LoginInput!): LoginResponse!
+  logout: LogoutResponse!
+  refreshTokens(refreshTokensInput: RefreshTokensInput!): RefreshTokensResponse!
   restoreUser(email: String!): UserModel!
+  signUp(newUserInput: CreateUserInput!): UserModel!
   updateUser(id: Float!, updateUserInput: UpdateUserInput!): UserModel!
 }
 
 type Query {
   getUserById(id: Float!): UserModel!
   getUsers(findUserInput: FindUsersInput!): [UserModel!]!
+}
+
+input RefreshTokensInput {
+  refreshToken: String!
+}
+
+type RefreshTokensResponse {
+  refreshToken: String!
+  token: String!
 }
 
 input StringFilter {

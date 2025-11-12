@@ -1,0 +1,118 @@
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { User } from 'src/users/user.entity';
+import { Repository } from 'typeorm';
+import bcrypt from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
+import { AppJwtPayload, LoginResult } from 'src/types/auth';
+import {
+  JWT_ACCESS_EXPIRES_IN,
+  JWT_ALGORITHM,
+  JWT_AUDIENCE,
+  JWT_ISSUER,
+  JWT_REFRESH_EXPIRES_IN,
+} from 'src/utility/conts';
+import ms from 'ms';
+import { LoginInput } from './dto/login.input';
+import { RefreshTokensInput } from './dto/refreshTokens.input';
+import { v4 as uuidv4 } from 'uuid';
+@Injectable()
+export class AuthService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  generateTokens(user: User) {
+    const payload: AppJwtPayload = {
+      sub: user.id?.toString?.(),
+      userid: user.userid,
+      name: user.name,
+      email: user.email,
+      role: 'user',
+      jti: uuidv4(),
+    };
+    const token = this.jwtService.sign(payload);
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: JWT_REFRESH_EXPIRES_IN,
+    });
+
+    return { token, refreshToken };
+  }
+
+  verifyToken(token: string, options?: JwtVerifyOptions): AppJwtPayload {
+    return this.jwtService.verify(token, {
+      algorithms: [JWT_ALGORITHM],
+      issuer: JWT_ISSUER,
+      audience: JWT_AUDIENCE,
+      ...options,
+    });
+  }
+
+  async login(loginInput: LoginInput): Promise<LoginResult> {
+    const { email, password } = loginInput;
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user)
+      throw new NotFoundException(`User with email ${email} not found`);
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) throw new UnauthorizedException();
+
+    const { token, refreshToken } = this.generateTokens(user);
+    await this.saveRefreshTokenJti(user.id, refreshToken);
+
+    return {
+      user,
+      token,
+      refreshToken,
+      expiresIn: {
+        token: Date.now() + ms(JWT_ACCESS_EXPIRES_IN),
+        refreshToken: Date.now() + ms(JWT_REFRESH_EXPIRES_IN),
+      },
+    };
+  }
+
+  async refreshTokens(refreshTokensInput: RefreshTokensInput) {
+    const { refreshToken } = refreshTokensInput;
+    const payload = this.verifyToken(refreshToken);
+
+    const user = await this.userRepository.findOne({
+      where: { id: Number(payload.sub) },
+    });
+    if (!user) throw new NotFoundException();
+
+    if (payload.jti !== user.refresh_token_jti) throw new ForbiddenException();
+
+    const newTokens = this.generateTokens(user);
+    await this.saveRefreshTokenJti(user.id, newTokens.refreshToken);
+    return newTokens;
+  }
+
+  async saveRefreshTokenJti(userId: number, token: string) {
+    const payload = this.verifyToken(token);
+    const user = await this.userRepository.preload({
+      id: userId,
+      refresh_token_jti: payload.jti,
+    });
+    if (!user) throw new NotFoundException();
+
+    return this.userRepository.save(user);
+  }
+
+  async logout(userPayload: AppJwtPayload) {
+    const { sub } = userPayload;
+    const user = await this.userRepository.preload({
+      id: Number(sub),
+      refresh_token_jti: null,
+    });
+    if (!user) throw new NotFoundException();
+
+    return this.userRepository.save(user);
+  }
+}

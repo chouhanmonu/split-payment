@@ -7,6 +7,16 @@ import { UsersModule } from './users/users.module';
 import { getEnvironment, isProduction } from './utility/env.util';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import {
+  JWT_ACCESS_EXPIRES_IN,
+  JWT_ALGORITHM,
+  JWT_AUDIENCE,
+  JWT_ISSUER,
+} from './utility/conts';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,9 +43,27 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       autoSchemaFile: 'src/schema.gql',
       sortSchema: true,
     }),
+    JwtModule.register({
+      global: true,
+      privateKey: process.env.JWT_PRIVATE_KEY?.replace?.(/\\n/g, '\n'),
+      publicKey: process.env.JWT_PUBLIC_KEY?.replace?.(/\\n/g, '\n'),
+      signOptions: {
+        algorithm: JWT_ALGORITHM,
+        expiresIn: JWT_ACCESS_EXPIRES_IN,
+        issuer: JWT_ISSUER,
+        audience: JWT_AUDIENCE,
+      },
+    }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
