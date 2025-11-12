@@ -21,6 +21,7 @@ import ms from 'ms';
 import { LoginInput } from './dto/login.input';
 import { RefreshTokensInput } from './dto/refreshTokens.input';
 import { v4 as uuidv4 } from 'uuid';
+import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class AuthService {
   constructor(
@@ -114,5 +115,34 @@ export class AuthService {
     if (!user) throw new NotFoundException();
 
     return this.userRepository.save(user);
+  }
+
+  async deleteMe(userPayload: AppJwtPayload) {
+    const { sub } = userPayload;
+    const user = await this.userRepository.findOneBy({
+      id: Number(sub),
+    });
+    if (!user) throw new NotFoundException();
+
+    return this.userRepository.softRemove(user);
+  }
+
+  async restoreMe(loginInput: LoginInput) {
+    const { email, password } = loginInput;
+    const user = await this.userRepository.findOne({
+      where: { email },
+      withDeleted: true,
+    });
+    if (!user) throw new NotFoundException();
+    if (user.deleted_at) await this.userRepository.restore(user.id);
+
+    const newPassword = await UsersService.hashPassord(password);
+    const updatedUser = await this.userRepository.preload({
+      id: user.id,
+      password: newPassword,
+    });
+    if (!updatedUser) throw new NotFoundException();
+
+    return this.userRepository.save(updatedUser);
   }
 }

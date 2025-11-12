@@ -8,8 +8,8 @@ import { LoginInput } from './dto/login.input';
 import { RefreshTokensInput } from './dto/refreshTokens.input';
 import { RefreshTokensResponse } from './models/refreshTokensResponse.model';
 import { User } from './auth.decorator';
-import { LogoutResponse } from './models/logoutResponse.model';
 import type { AppJwtPayload } from 'src/types/auth';
+import { Response } from 'src/utility/global.model';
 
 @Resolver()
 export class AuthResolver {
@@ -35,19 +35,33 @@ export class AuthResolver {
     return this.authService.refreshTokens(refreshTokensInput);
   }
 
-  @Mutation(() => LogoutResponse)
+  @Mutation(() => Response)
   async logout(@User() user: AppJwtPayload) {
     await this.authService.logout(user);
     return {
+      success: true,
       message: 'Logout success!',
     };
   }
 
-  // delele acoount
+  @Mutation(() => Response)
+  async deleteMe(@User() user: AppJwtPayload) {
+    await this.authService.deleteMe(user);
+    return {
+      success: true,
+      message: 'User deleted successfully!',
+    };
+  }
 
-  // restore account
+  @Mutation(() => Response)
+  async restoreMe(@Args('loginInput') loginInput: LoginInput) {
+    await this.authService.restoreMe(loginInput);
 
-  // reset password
+    return {
+      success: true,
+      message: 'User restored successfully!',
+    };
+  }
 
   // oauth
 }

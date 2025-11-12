@@ -23,7 +23,7 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  private static hashPassord(password: string) {
+  static hashPassord(password: string) {
     return bcrypt.hash(password, JWT_HASH_SALT);
   }
 
