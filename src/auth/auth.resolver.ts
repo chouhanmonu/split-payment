@@ -10,6 +10,8 @@ import { RefreshTokensResponse } from './models/refreshTokensResponse.model';
 import { User } from './auth.decorator';
 import type { AppJwtPayload } from 'src/types/auth';
 import { Response } from 'src/utility/global.model';
+import { ResetPassordInput } from './dto/resetPassword.input';
+import { RestoreMeInput } from './dto/restoreMe.input';
 
 @Resolver()
 export class AuthResolver {
@@ -54,12 +56,25 @@ export class AuthResolver {
   }
 
   @Mutation(() => Response)
-  async restoreMe(@Args('loginInput') loginInput: LoginInput) {
-    await this.authService.restoreMe(loginInput);
+  async restoreMe(@Args('restoreMeInput') restoreMeInput: RestoreMeInput) {
+    await this.authService.restoreMe(restoreMeInput);
 
     return {
       success: true,
       message: 'User restored successfully!',
+    };
+  }
+
+  @Mutation(() => Response)
+  async resetPassword(
+    @Args('resetPasswordInput') resetPasswordInput: ResetPassordInput,
+  ) {
+    // TODO: max 3 attemps per day from an ip
+    await this.authService.resetPassword(resetPasswordInput);
+
+    return {
+      success: true,
+      message: 'Email sent successfully!',
     };
   }
 

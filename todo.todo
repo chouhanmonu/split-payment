@@ -10,4 +10,5 @@ Others:
   ☐ use swagger for api documentation
 
 Also:
-  enable row level security in pg
+  ☐ enable row level security in pg
+  ☐ use redis as cache store

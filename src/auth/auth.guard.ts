@@ -9,7 +9,13 @@ import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  private readonly skipOperations = ['signUp', 'login', 'refreshTokens'];
+  private readonly skipOperations = [
+    'signUp',
+    'login',
+    'refreshTokens',
+    'resetPassword',
+    'restoreMe',
+  ];
 
   constructor(private readonly authService: AuthService) {}
 

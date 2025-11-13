@@ -1,5 +1,6 @@
 import {
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -22,12 +23,22 @@ import { LoginInput } from './dto/login.input';
 import { RefreshTokensInput } from './dto/refreshTokens.input';
 import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from 'src/users/users.service';
+import { ResetPassordInput } from './dto/resetPassword.input';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { randomBytes } from 'crypto';
+import { ConfigService } from '@nestjs/config';
+import { EmailService } from 'src/email/email.service';
+import _ from 'lodash';
+import { RestoreMeInput } from './dto/restoreMe.input';
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly configService: ConfigService,
+    private readonly emailService: EmailService,
   ) {}
 
   generateTokens(user: User) {
@@ -127,22 +138,45 @@ export class AuthService {
     return this.userRepository.softRemove(user);
   }
 
-  async restoreMe(loginInput: LoginInput) {
-    const { email, password } = loginInput;
+  async restoreMe(restoreMeInput: RestoreMeInput) {
+    const { token, password } = restoreMeInput;
+
+    const userId = await this.cacheManager.get<number>(`reset:${token}`);
+    if (!userId) throw new NotFoundException('Token invalid or expired');
+
     const user = await this.userRepository.findOne({
-      where: { email },
+      where: { id: userId },
       withDeleted: true,
     });
     if (!user) throw new NotFoundException();
     if (user.deleted_at) await this.userRepository.restore(user.id);
 
     const newPassword = await UsersService.hashPassord(password);
-    const updatedUser = await this.userRepository.preload({
+    const updateUserEntity = await this.userRepository.preload({
       id: user.id,
       password: newPassword,
     });
-    if (!updatedUser) throw new NotFoundException();
+    if (!updateUserEntity) throw new NotFoundException();
 
-    return this.userRepository.save(updatedUser);
+    await this.userRepository.save(updateUserEntity);
+    await this.cacheManager.del(`reset:${token}`);
+  }
+
+  async resetPassword(resetPasswordInput: ResetPassordInput) {
+    const { email } = resetPasswordInput;
+    const user = await this.userRepository.findOne({
+      where: { email },
+      withDeleted: true,
+    });
+    if (!user) throw new NotFoundException();
+
+    const token = randomBytes(32).toString('hex');
+    await this.cacheManager.set(`reset:${token}`, user.id, 3600_1000);
+    // TODO: clear all token every day at 2 AM
+
+    const resetLink = `${this.configService.get('ADMIN_APP_URL')}/reset-password?token=${token}`;
+    const firstName = _.capitalize(user.name?.split?.(' ')?.at?.(0)) as string;
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    this.emailService.sendResetEmail(user.email, firstName, resetLink);
   }
 }

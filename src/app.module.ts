@@ -17,6 +17,8 @@ import {
 } from './utility/conts';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { CacheModule } from '@nestjs/cache-manager';
+import { EmailService } from './email/email.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -54,6 +56,9 @@ import { AuthGuard } from './auth/auth.guard';
         audience: JWT_AUDIENCE,
       },
     }),
+    CacheModule.register({
+      isGlobal: true,
+    }),
     UsersModule,
     AuthModule,
   ],
@@ -64,6 +69,7 @@ import { AuthGuard } from './auth/auth.guard';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    EmailService,
   ],
 })
 export class AppModule {}

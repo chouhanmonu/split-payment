@@ -48,7 +48,8 @@ type Mutation {
   login(loginInput: LoginInput!): LoginResponse!
   logout: Response!
   refreshTokens(refreshTokensInput: RefreshTokensInput!): RefreshTokensResponse!
-  restoreMe(loginInput: LoginInput!): Response!
+  resetPassword(resetPasswordInput: ResetPassordInput!): Response!
+  restoreMe(restoreMeInput: RestoreMeInput!): Response!
   restoreUser(email: String!): UserModel!
   signUp(newUserInput: CreateUserInput!): UserModel!
   updateUser(id: Float!, updateUserInput: UpdateUserInput!): UserModel!
@@ -68,9 +69,18 @@ type RefreshTokensResponse {
   token: String!
 }
 
+input ResetPassordInput {
+  email: String!
+}
+
 type Response {
   message: String!
   success: Boolean!
+}
+
+input RestoreMeInput {
+  password: String!
+  token: String!
 }
 
 input StringFilter {
