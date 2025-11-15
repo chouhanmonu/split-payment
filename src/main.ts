@@ -2,12 +2,22 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { getEnvironment } from './utility/env.util';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   console.log(`App running in \x1b[34m${getEnvironment()}\x1b[0m environment`);
 
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+
+  const config = app.get(ConfigService);
+  app.enableCors({
+    origin: config.get<string>('WEB_APP_URL'),
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
   await app.listen(process.env.PORT ?? 3000);
 
   const appLogger = new Logger('App');

@@ -174,7 +174,7 @@ export class AuthService {
     await this.cacheManager.set(`reset:${token}`, user.id, 3600_1000);
     // TODO: clear all token every day at 2 AM
 
-    const resetLink = `${this.configService.get('ADMIN_APP_URL')}/reset-password?token=${token}`;
+    const resetLink = `${this.configService.get('WEB_APP_URL')}/reset-password?token=${token}`;
     const firstName = _.capitalize(user.name?.split?.(' ')?.at?.(0)) as string;
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.emailService.sendResetEmail(user.email, firstName, resetLink);
