@@ -30,6 +30,7 @@
     "@nestjs/graphql": "^13.2.0",
     "@nestjs/jwt": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/schedule": "^6.0.1",
     "@nestjs/typeorm": "^11.0.0",
     "@types/lodash": "^4.17.20",
     "bcrypt": "^6.0.0",

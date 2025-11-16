@@ -20,7 +20,6 @@ import {
 } from 'src/utility/conts';
 import ms from 'ms';
 import { LoginInput } from './dto/login.input';
-import { RefreshTokensInput } from './dto/refreshTokens.input';
 import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from 'src/users/users.service';
 import { ResetPassordInput } from './dto/resetPassword.input';
@@ -67,6 +66,17 @@ export class AuthService {
     });
   }
 
+  async saveRefreshTokenJti(userId: number, token: string) {
+    const payload = this.verifyToken(token);
+    const user = await this.userRepository.preload({
+      id: userId,
+      refresh_token_jti: payload.jti,
+    });
+    if (!user) throw new NotFoundException();
+
+    return this.userRepository.save(user);
+  }
+
   async login(loginInput: LoginInput): Promise<LoginResult> {
     const { email, password } = loginInput;
     const user = await this.userRepository.findOneBy({ email });
@@ -90,41 +100,28 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(refreshTokensInput: RefreshTokensInput) {
-    const { refreshToken } = refreshTokensInput;
-    const payload = this.verifyToken(refreshToken);
-
+  async refreshTokens(userPayload: AppJwtPayload) {
     const user = await this.userRepository.findOne({
-      where: { id: Number(payload.sub) },
+      where: { id: Number(userPayload.sub) },
     });
     if (!user) throw new NotFoundException();
 
-    if (payload.jti !== user.refresh_token_jti) throw new ForbiddenException();
+    if (userPayload.jti !== user.refresh_token_jti)
+      throw new ForbiddenException();
 
     const newTokens = this.generateTokens(user);
     await this.saveRefreshTokenJti(user.id, newTokens.refreshToken);
     return newTokens;
   }
 
-  async saveRefreshTokenJti(userId: number, token: string) {
-    const payload = this.verifyToken(token);
-    const user = await this.userRepository.preload({
-      id: userId,
-      refresh_token_jti: payload.jti,
-    });
-    if (!user) throw new NotFoundException();
-
-    return this.userRepository.save(user);
-  }
-
   async logout(userPayload: AppJwtPayload) {
     const { sub } = userPayload;
-    const user = await this.userRepository.preload({
-      id: Number(sub),
-      refresh_token_jti: null,
-    });
-    if (!user) throw new NotFoundException();
 
+    const user = await this.userRepository.findOneBy({ id: Number(sub) });
+    if (!user) throw new NotFoundException();
+    if (!user.refresh_token_jti) return;
+
+    user.refresh_token_jti = null;
     return this.userRepository.save(user);
   }
 
@@ -172,10 +169,9 @@ export class AuthService {
 
     const token = randomBytes(32).toString('hex');
     await this.cacheManager.set(`reset:${token}`, user.id, 3600_1000);
-    // TODO: clear all token every day at 2 AM
 
     const resetLink = `${this.configService.get('WEB_APP_URL')}/reset-password?token=${token}`;
-    const firstName = _.capitalize(user.name?.split?.(' ')?.at?.(0)) as string;
+    const firstName = _.capitalize(user.name?.split?.(' ')?.at?.(0));
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.emailService.sendResetEmail(user.email, firstName, resetLink);
   }

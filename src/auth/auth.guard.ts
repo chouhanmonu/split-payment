@@ -12,7 +12,6 @@ export class AuthGuard implements CanActivate {
   private readonly skipOperations = [
     'signUp',
     'login',
-    'refreshTokens',
     'resetPassword',
     'restoreMe',
   ];

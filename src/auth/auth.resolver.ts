@@ -5,7 +5,6 @@ import { UsersService } from 'src/users/users.service';
 import { LoginResponse } from './models/loginResponse.model';
 import { AuthService } from './auth.service';
 import { LoginInput } from './dto/login.input';
-import { RefreshTokensInput } from './dto/refreshTokens.input';
 import { RefreshTokensResponse } from './models/refreshTokensResponse.model';
 import { User } from './auth.decorator';
 import type { AppJwtPayload } from 'src/types/auth';
@@ -31,10 +30,8 @@ export class AuthResolver {
   }
 
   @Mutation(() => RefreshTokensResponse)
-  refreshTokens(
-    @Args('refreshTokensInput') refreshTokensInput: RefreshTokensInput,
-  ) {
-    return this.authService.refreshTokens(refreshTokensInput);
+  refreshTokens(@User() user: AppJwtPayload) {
+    return this.authService.refreshTokens(user);
   }
 
   @Mutation(() => Response)

@@ -19,6 +19,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { CacheModule } from '@nestjs/cache-manager';
 import { EmailService } from './email/email.service';
+import { TasksService } from './tasks/tasks.service';
+import { ScheduleModule } from '@nestjs/schedule';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -59,6 +61,7 @@ import { EmailService } from './email/email.service';
     CacheModule.register({
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
     UsersModule,
     AuthModule,
   ],
@@ -70,6 +73,7 @@ import { EmailService } from './email/email.service';
       useClass: AuthGuard,
     },
     EmailService,
+    TasksService,
   ],
 })
 export class AppModule {}

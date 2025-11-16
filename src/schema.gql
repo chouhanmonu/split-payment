@@ -47,7 +47,7 @@ type Mutation {
   deleteUser(email: String!, password: String!): UserModel!
   login(loginInput: LoginInput!): LoginResponse!
   logout: Response!
-  refreshTokens(refreshTokensInput: RefreshTokensInput!): RefreshTokensResponse!
+  refreshTokens: RefreshTokensResponse!
   resetPassword(resetPasswordInput: ResetPassordInput!): Response!
   restoreMe(restoreMeInput: RestoreMeInput!): Response!
   restoreUser(email: String!): UserModel!
@@ -58,10 +58,6 @@ type Mutation {
 type Query {
   getUserById(id: Float!): UserModel!
   getUsers(findUserInput: FindUsersInput!): [UserModel!]!
-}
-
-input RefreshTokensInput {
-  refreshToken: String!
 }
 
 type RefreshTokensResponse {
