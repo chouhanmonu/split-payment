@@ -9,7 +9,7 @@ input CreateUserInput {
   password: String!
   phone: String
   profile_picture_url: String
-  userid: String
+  user_uid: String
 }
 
 """
@@ -95,7 +95,7 @@ input UpdateUserInput {
   password: String
   phone: String
   profile_picture_url: String
-  userid: String
+  user_uid: String
 }
 
 type UserModel {
@@ -108,7 +108,7 @@ type UserModel {
   phone: String
   profile_picture_url: String
   updated_at: DateTime!
-  userid: String!
+  user_uid: String!
 }
 
 input UserOrderInput {
@@ -120,5 +120,5 @@ input UserWhereInput {
   email: StringFilter
   name: StringFilter
   phone: StringFilter
-  userid: StringFilter
+  user_uid: StringFilter
 }

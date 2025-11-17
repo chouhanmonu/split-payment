@@ -1,6 +1,6 @@
 import { customAlphabet } from 'nanoid';
 
-export const generateUserId = (name?: string) => {
+export const generateUserUid = (name?: string) => {
   const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 6);
   const prefix = name
     ? name

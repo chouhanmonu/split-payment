@@ -9,14 +9,14 @@ import {
 } from 'typeorm';
 
 @Entity('users')
-@Unique(['userid'])
+@Unique(['user_uid'])
 @Unique(['email'])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar', length: 30, unique: true })
-  userid: string;
+  user_uid: string;
 
   @Column({ type: 'varchar', length: 100 })
   name: string;
@@ -25,7 +25,7 @@ export class User {
   email: string;
 
   @Column({ type: 'varchar', length: 255 })
-  password: string;
+  password_hash: string;
 
   @Column({ type: 'varchar', length: 512, nullable: true })
   profile_picture_url: string;
@@ -39,12 +39,12 @@ export class User {
   @Column({ type: 'char', length: 36, nullable: true })
   refresh_token_jti: string | null;
 
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
+  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
   deleted_at: Date | null;
 }

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -8,7 +7,7 @@ import { FindManyOptions, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserInput } from './dto/createUser.input';
-import { generateUserId } from 'src/utility/helpers';
+import { generateUserUid } from 'src/utility/helpers';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserInput } from './dto/updateUser.input';
 import { UserModel } from './models/user.model';
@@ -45,8 +44,8 @@ export class UsersService {
   }
 
   async create(newUserInput: CreateUserInput) {
-    if (!newUserInput?.userid)
-      newUserInput.userid = generateUserId(
+    if (!newUserInput?.user_uid)
+      newUserInput.user_uid = generateUserUid(
         newUserInput.name?.split?.(' ')?.at?.(0),
       );
 
@@ -54,7 +53,10 @@ export class UsersService {
       newUserInput.password,
     );
 
-    const userEntity = this.userRepository.create(newUserInput);
+    const userEntity = this.userRepository.create({
+      ...newUserInput,
+      password_hash: newUserInput.password,
+    });
     return this.userRepository.save(userEntity);
   }
 
@@ -64,7 +66,11 @@ export class UsersService {
         updateUserInput.password,
       );
 
-    const user = await this.userRepository.preload({ id, ...updateUserInput });
+    const user = await this.userRepository.preload({
+      id,
+      password_hash: updateUserInput.password,
+      ...updateUserInput,
+    });
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
 
     return this.userRepository.save(user);
@@ -78,7 +84,7 @@ export class UsersService {
     if (!user)
       throw new NotFoundException(`User with email ${email} not found`);
 
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, user.password_hash);
     if (!match) throw new UnauthorizedException();
 
     return this.userRepository.softRemove(user);

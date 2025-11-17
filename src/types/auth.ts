@@ -12,7 +12,7 @@ export type LoginResult = {
 };
 
 export interface AppJwtPayload extends BaseJwtPayload {
-  userid: string;
+  userUid: string;
   name: string;
   email: string;
   role: 'user' | 'admin';

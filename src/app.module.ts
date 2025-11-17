@@ -21,6 +21,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { EmailService } from './email/email.service';
 import { TasksService } from './tasks/tasks.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { GraphQLError } from 'graphql';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -46,6 +47,17 @@ import { ScheduleModule } from '@nestjs/schedule';
       graphiql: true,
       autoSchemaFile: 'src/schema.gql',
       sortSchema: true,
+      formatError: (err: GraphQLError) => {
+        const originalError = err.extensions.originalError as any;
+        const isProd = isProduction();
+
+        if (err.extensions && isProd) {
+          delete err.extensions.stacktrace;
+          delete err.extensions.stack;
+        }
+
+        return isProd ? originalError : err;
+      },
     }),
     JwtModule.register({
       global: true,

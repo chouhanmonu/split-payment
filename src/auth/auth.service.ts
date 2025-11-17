@@ -43,7 +43,7 @@ export class AuthService {
   generateTokens(user: User) {
     const payload: AppJwtPayload = {
       sub: user.id?.toString?.(),
-      userid: user.userid,
+      userUid: user.user_uid,
       name: user.name,
       email: user.email,
       role: 'user',
@@ -83,7 +83,7 @@ export class AuthService {
     if (!user)
       throw new NotFoundException(`User with email ${email} not found`);
 
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, user.password_hash);
     if (!match) throw new UnauthorizedException();
 
     const { token, refreshToken } = this.generateTokens(user);
@@ -151,7 +151,7 @@ export class AuthService {
     const newPassword = await UsersService.hashPassord(password);
     const updateUserEntity = await this.userRepository.preload({
       id: user.id,
-      password: newPassword,
+      password_hash: newPassword,
     });
     if (!updateUserEntity) throw new NotFoundException();
 

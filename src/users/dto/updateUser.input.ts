@@ -6,7 +6,7 @@ export class UpdateUserInput {
   @Field({ nullable: true })
   @IsOptional()
   @MaxLength(30)
-  userid: string;
+  user_uid: string;
 
   @Field({ nullable: true })
   @IsOptional()

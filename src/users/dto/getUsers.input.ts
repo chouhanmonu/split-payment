@@ -4,7 +4,7 @@ import { StringFilter } from 'src/utility/input-types';
 @InputType()
 export class UserWhereInput {
   @Field(() => StringFilter, { nullable: true })
-  userid?: StringFilter;
+  user_uid?: StringFilter;
 
   @Field(() => StringFilter, { nullable: true })
   name?: StringFilter;
