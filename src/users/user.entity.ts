@@ -6,7 +6,9 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   Unique,
+  OneToMany,
 } from 'typeorm';
+import { UserRefreshTokens } from './userRefreshTokens.entity';
 
 @Entity('users')
 @Unique(['user_uid'])
@@ -36,8 +38,8 @@ export class User {
   @Column({ type: 'char', length: 3, default: 'USD' })
   default_currency: string;
 
-  @Column({ type: 'char', length: 36, nullable: true })
-  refresh_token_jti: string | null;
+  @OneToMany(() => UserRefreshTokens, (token) => token.user)
+  refresh_tokens: UserRefreshTokens[];
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

@@ -58,6 +58,7 @@ import { GraphQLError } from 'graphql';
 
         return isProd ? originalError : err;
       },
+      context: ({ req, res }) => ({ req, res }),
     }),
     JwtModule.register({
       global: true,

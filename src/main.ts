@@ -3,11 +3,18 @@ import { AppModule } from './app.module';
 import { getEnvironment } from './utility/env.util';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 
 async function bootstrap() {
   console.log(`App running in \x1b[34m${getEnvironment()}\x1b[0m environment`);
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter({ trustProxy: true }),
+  );
   app.useGlobalPipes(new ValidationPipe());
 
   const config = app.get(ConfigService);

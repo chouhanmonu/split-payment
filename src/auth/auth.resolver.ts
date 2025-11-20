@@ -11,6 +11,8 @@ import type { AppJwtPayload } from 'src/types/auth';
 import { Response } from 'src/utility/global.model';
 import { ResetPassordInput } from './dto/resetPassword.input';
 import { RestoreMeInput } from './dto/restoreMe.input';
+import { RequestMeta } from 'src/global/app.decorator';
+import type { RequestMetadata } from 'src/types/request';
 
 @Resolver()
 export class AuthResolver {
@@ -25,7 +27,12 @@ export class AuthResolver {
   }
 
   @Mutation(() => LoginResponse)
-  login(@Args('loginInput') loginInput: LoginInput) {
+  login(
+    @RequestMeta() RequestMetadata: RequestMetadata,
+    @Args('loginInput') loginInput: LoginInput,
+  ) {
+    console.log(RequestMetadata);
+
     return this.authService.login(loginInput);
   }
 

@@ -70,7 +70,7 @@ export class AuthService {
     const payload = this.verifyToken(token);
     const user = await this.userRepository.preload({
       id: userId,
-      refresh_token_jti: payload.jti,
+      // refresh_token_jti: payload.jti,
     });
     if (!user) throw new NotFoundException();
 
@@ -86,13 +86,13 @@ export class AuthService {
     const match = await bcrypt.compare(password, user.password_hash);
     if (!match) throw new UnauthorizedException();
 
-    const { token, refreshToken } = this.generateTokens(user);
-    await this.saveRefreshTokenJti(user.id, refreshToken);
+    // const { token, refreshToken } = this.generateTokens(user);
+    // await this.saveRefreshTokenJti(user.id, refreshToken);
 
     return {
       user,
-      token,
-      refreshToken,
+      token: '',
+      refreshToken: '',
       expiresIn: {
         token: Date.now() + ms(JWT_ACCESS_EXPIRES_IN),
         refreshToken: Date.now() + ms(JWT_REFRESH_EXPIRES_IN),
@@ -106,8 +106,8 @@ export class AuthService {
     });
     if (!user) throw new NotFoundException();
 
-    if (userPayload.jti !== user.refresh_token_jti)
-      throw new ForbiddenException();
+    // if (userPayload.jti !== user.refresh_token_jti)
+    //   throw new ForbiddenException();
 
     const newTokens = this.generateTokens(user);
     await this.saveRefreshTokenJti(user.id, newTokens.refreshToken);
@@ -119,9 +119,9 @@ export class AuthService {
 
     const user = await this.userRepository.findOneBy({ id: Number(sub) });
     if (!user) throw new NotFoundException();
-    if (!user.refresh_token_jti) return;
+    // if (!user.refresh_token_jti) return;
 
-    user.refresh_token_jti = null;
+    // user.refresh_token_jti = null;
     return this.userRepository.save(user);
   }
 
