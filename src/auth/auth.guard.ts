@@ -23,6 +23,8 @@ export class AuthGuard implements CanActivate {
     const { req } = gqlCtx.getContext();
     const operationName = gqlCtx.getInfo()?.fieldName;
 
+    if (!req) return true; // allow non-GraphQL requests
+
     if (this.skipOperations.includes(operationName as string)) {
       return true;
     }
