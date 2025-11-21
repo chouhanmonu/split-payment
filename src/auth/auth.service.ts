@@ -29,11 +29,15 @@ import { ConfigService } from '@nestjs/config';
 import { EmailService } from 'src/email/email.service';
 import _ from 'lodash';
 import { RestoreMeInput } from './dto/restoreMe.input';
+import { RequestMetadata } from 'src/types/request';
+import { UserRefreshTokens } from 'src/users/userRefreshTokens.entity';
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(UserRefreshTokens)
+    private readonly userRefreshTokensRepository: Repository<UserRefreshTokens>,
     private readonly jwtService: JwtService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly configService: ConfigService,
@@ -66,18 +70,32 @@ export class AuthService {
     });
   }
 
-  async saveRefreshTokenJti(userId: number, token: string) {
+  async saveRefreshTokenJti(
+    user: User,
+    token: string,
+    requestMetadata: RequestMetadata,
+  ) {
     const payload = this.verifyToken(token);
-    const user = await this.userRepository.preload({
-      id: userId,
-      // refresh_token_jti: payload.jti,
-    });
-    if (!user) throw new NotFoundException();
-
-    return this.userRepository.save(user);
+    return this.userRefreshTokensRepository.upsert(
+      {
+        user,
+        device_id: requestMetadata.deviceId,
+        refresh_token_jti: payload.jti,
+        user_agent: requestMetadata.userAgent,
+        ip_address: requestMetadata.ip,
+        expires_at: new Date((payload.exp as number) * 1000),
+      },
+      {
+        conflictPaths: ['user', 'device_id'],
+        skipUpdateIfNoValuesChanged: true,
+      },
+    );
   }
 
-  async login(loginInput: LoginInput): Promise<LoginResult> {
+  async login(
+    loginInput: LoginInput,
+    requestMetadata: RequestMetadata,
+  ): Promise<LoginResult> {
     const { email, password } = loginInput;
     const user = await this.userRepository.findOneBy({ email });
     if (!user)
@@ -86,13 +104,13 @@ export class AuthService {
     const match = await bcrypt.compare(password, user.password_hash);
     if (!match) throw new UnauthorizedException();
 
-    // const { token, refreshToken } = this.generateTokens(user);
-    // await this.saveRefreshTokenJti(user.id, refreshToken);
+    const { token, refreshToken } = this.generateTokens(user);
+    await this.saveRefreshTokenJti(user, refreshToken, requestMetadata);
 
     return {
       user,
-      token: '',
-      refreshToken: '',
+      token,
+      refreshToken,
       expiresIn: {
         token: Date.now() + ms(JWT_ACCESS_EXPIRES_IN),
         refreshToken: Date.now() + ms(JWT_REFRESH_EXPIRES_IN),
@@ -100,29 +118,52 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(userPayload: AppJwtPayload) {
+  async refreshTokens(
+    userPayload: AppJwtPayload,
+    requestMetadata: RequestMetadata,
+  ) {
     const user = await this.userRepository.findOne({
       where: { id: Number(userPayload.sub) },
+      relations: ['refresh_tokens'],
     });
     if (!user) throw new NotFoundException();
 
-    // if (userPayload.jti !== user.refresh_token_jti)
-    //   throw new ForbiddenException();
+    if (
+      user.refresh_tokens.findIndex(
+        (token) =>
+          token.device_id === requestMetadata.deviceId &&
+          token.refresh_token_jti === userPayload.jti,
+      ) === -1
+    )
+      throw new ForbiddenException();
 
     const newTokens = this.generateTokens(user);
-    await this.saveRefreshTokenJti(user.id, newTokens.refreshToken);
+    await this.saveRefreshTokenJti(
+      user,
+      newTokens.refreshToken,
+      requestMetadata,
+    );
     return newTokens;
   }
 
-  async logout(userPayload: AppJwtPayload) {
+  async logout(userPayload: AppJwtPayload, requestMetadata: RequestMetadata) {
     const { sub } = userPayload;
 
-    const user = await this.userRepository.findOneBy({ id: Number(sub) });
+    const user = await this.userRepository.findOne({
+      where: { id: Number(sub) },
+      relations: ['refresh_tokens'],
+    });
     if (!user) throw new NotFoundException();
-    // if (!user.refresh_token_jti) return;
 
-    // user.refresh_token_jti = null;
-    return this.userRepository.save(user);
+    const correspondingToken = user.refresh_tokens?.find?.(
+      (token) => token.device_id === requestMetadata.deviceId,
+    );
+    if (!correspondingToken) throw new NotFoundException();
+
+    return this.userRefreshTokensRepository.save({
+      ...correspondingToken,
+      refresh_token_jti: null,
+    });
   }
 
   async deleteMe(userPayload: AppJwtPayload) {

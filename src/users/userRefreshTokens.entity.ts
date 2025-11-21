@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -26,8 +27,8 @@ export class UserRefreshTokens {
   @Column({ type: 'varchar', length: 64 })
   device_id: string;
 
-  @Column({ type: 'char', length: 36 })
-  refresh_token_jti: string;
+  @Column({ type: 'char', length: 36, nullable: true })
+  refresh_token_jti: string | null;
 
   @Column({ type: 'inet', nullable: true })
   ip_address: string | null;
@@ -38,9 +39,15 @@ export class UserRefreshTokens {
   @Column({ type: 'timestamptz', nullable: true })
   expires_at: Date | null;
 
-  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({
+    type: 'timestamptz',
+    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
+  })
   created_at: Date;
 
-  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
+  })
   updated_at: Date;
 }

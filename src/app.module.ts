@@ -40,6 +40,7 @@ import { GraphQLError } from 'graphql';
         database: configService.get<string>('DB_NAME'),
         synchronize: !isProduction(),
         autoLoadEntities: true,
+        timezone: 'Z',
       }),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({

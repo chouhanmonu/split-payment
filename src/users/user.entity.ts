@@ -41,10 +41,16 @@ export class User {
   @OneToMany(() => UserRefreshTokens, (token) => token.user)
   refresh_tokens: UserRefreshTokens[];
 
-  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({
+    type: 'timestamptz',
+    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
+  })
   created_at: Date;
 
-  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
+  })
   updated_at: Date;
 
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })

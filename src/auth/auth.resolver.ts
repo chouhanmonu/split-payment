@@ -28,22 +28,26 @@ export class AuthResolver {
 
   @Mutation(() => LoginResponse)
   login(
-    @RequestMeta() RequestMetadata: RequestMetadata,
     @Args('loginInput') loginInput: LoginInput,
+    @RequestMeta() RequestMetadata: RequestMetadata,
   ) {
-    console.log(RequestMetadata);
-
-    return this.authService.login(loginInput);
+    return this.authService.login(loginInput, RequestMetadata);
   }
 
   @Mutation(() => RefreshTokensResponse)
-  refreshTokens(@User() user: AppJwtPayload) {
-    return this.authService.refreshTokens(user);
+  refreshTokens(
+    @User() user: AppJwtPayload,
+    @RequestMeta() requestMetadata: RequestMetadata,
+  ) {
+    return this.authService.refreshTokens(user, requestMetadata);
   }
 
   @Mutation(() => Response)
-  async logout(@User() user: AppJwtPayload) {
-    await this.authService.logout(user);
+  async logout(
+    @User() user: AppJwtPayload,
+    @RequestMeta() requestMetadata: RequestMetadata,
+  ) {
+    await this.authService.logout(user, requestMetadata);
     return {
       success: true,
       message: 'Logout success!',
