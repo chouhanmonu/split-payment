@@ -2,6 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddExpenseInput {
+  description: String!
+}
+
 input CreateUserInput {
   default_currency: String
   email: String!
@@ -16,6 +20,21 @@ input CreateUserInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type ExpenseModel {
+  addedBy: UserModel!
+  amount: Float!
+  created_at: DateTime!
+  currency: String!
+  deleted_at: DateTime
+  description: String!
+  id: ID!
+  note: String
+  payer: UserModel!
+  split_type: SplitType!
+  splits: [SplitModel!]!
+  updated_at: DateTime!
+}
 
 type ExpiresIn {
   refreshToken: Float!
@@ -42,6 +61,7 @@ type LoginResponse {
 }
 
 type Mutation {
+  addExpense(addExpenseInput: AddExpenseInput!): ExpenseModel!
   createUser(newUserInput: CreateUserInput!): UserModel!
   deleteMe: Response!
   deleteUser(email: String!, password: String!): UserModel!
@@ -79,6 +99,26 @@ input RestoreMeInput {
   token: String!
 }
 
+type SplitModel {
+  created_at: DateTime!
+  id: ID!
+  member: UserModel!
+  value: Float!
+  value_type: SplitValueType!
+}
+
+"""Type of split (equal or unequal)"""
+enum SplitType {
+  EQUAL
+  UNEQUAL
+}
+
+"""Type of split value (amount or percent)"""
+enum SplitValueType {
+  AMOUNT
+  PERCENT
+}
+
 input StringFilter {
   contains: String
   endsWith: String
@@ -103,7 +143,7 @@ type UserModel {
   default_currency: String!
   deleted_at: DateTime
   email: String!
-  id: Int!
+  id: ID!
   name: String!
   phone: String
   profile_picture_url: String

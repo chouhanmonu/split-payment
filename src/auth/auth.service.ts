@@ -29,15 +29,15 @@ import { ConfigService } from '@nestjs/config';
 import { EmailService } from 'src/email/email.service';
 import _ from 'lodash';
 import { RestoreMeInput } from './dto/restoreMe.input';
-import { RequestMetadata } from 'src/types/request';
-import { UserRefreshTokens } from 'src/users/userRefreshTokens.entity';
+import { UserRefreshToken } from 'src/users/userRefreshToken.entity';
+import { RequestMetaInput } from 'src/global/dto/requestMeta.input';
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(UserRefreshTokens)
-    private readonly userRefreshTokensRepository: Repository<UserRefreshTokens>,
+    @InjectRepository(UserRefreshToken)
+    private readonly userRefreshTokenRepository: Repository<UserRefreshToken>,
     private readonly jwtService: JwtService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly configService: ConfigService,
@@ -73,10 +73,10 @@ export class AuthService {
   async saveRefreshTokenJti(
     user: User,
     token: string,
-    requestMetadata: RequestMetadata,
+    requestMetadata: RequestMetaInput,
   ) {
     const payload = this.verifyToken(token);
-    return this.userRefreshTokensRepository.upsert(
+    return this.userRefreshTokenRepository.upsert(
       {
         user,
         device_id: requestMetadata.deviceId,
@@ -94,7 +94,7 @@ export class AuthService {
 
   async login(
     loginInput: LoginInput,
-    requestMetadata: RequestMetadata,
+    requestMetadata: RequestMetaInput,
   ): Promise<LoginResult> {
     const { email, password } = loginInput;
     const user = await this.userRepository.findOneBy({ email });
@@ -120,7 +120,7 @@ export class AuthService {
 
   async refreshTokens(
     userPayload: AppJwtPayload,
-    requestMetadata: RequestMetadata,
+    requestMetadata: RequestMetaInput,
   ) {
     const user = await this.userRepository.findOne({
       where: { id: Number(userPayload.sub) },
@@ -146,7 +146,7 @@ export class AuthService {
     return newTokens;
   }
 
-  async logout(userPayload: AppJwtPayload, requestMetadata: RequestMetadata) {
+  async logout(userPayload: AppJwtPayload, requestMetadata: RequestMetaInput) {
     const { sub } = userPayload;
 
     const user = await this.userRepository.findOne({
@@ -160,7 +160,7 @@ export class AuthService {
     );
     if (!correspondingToken) throw new NotFoundException();
 
-    return this.userRefreshTokensRepository.save({
+    return this.userRefreshTokenRepository.save({
       ...correspondingToken,
       refresh_token_jti: null,
     });

@@ -1,10 +1,11 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { RequestMetadata } from 'src/types/request';
+import { plainToInstance } from 'class-transformer';
 import { UAParser } from 'ua-parser-js';
+import { RequestMetaInput } from '../dto/requestMeta.input';
 
 export const RequestMeta = createParamDecorator(
-  (data: unknown, context: ExecutionContext): RequestMetadata => {
+  (data: unknown, context: ExecutionContext): RequestMetaInput => {
     const ctx = GqlExecutionContext.create(context);
     const request = ctx.getContext().req;
     const parser = new UAParser();
@@ -15,10 +16,10 @@ export const RequestMeta = createParamDecorator(
     const deviceId = request.headers['x-device-id'];
     const ip = request.ip as string;
 
-    return {
+    return plainToInstance(RequestMetaInput, {
       deviceId,
       userAgent: JSON.stringify(userAgentObj),
       ip,
-    };
+    });
   },
 );

@@ -8,7 +8,10 @@ import {
   Unique,
   OneToMany,
 } from 'typeorm';
-import { UserRefreshTokens } from './userRefreshTokens.entity';
+import { UserRefreshToken } from './userRefreshToken.entity';
+import { Expense } from 'src/expenses/expense.entity';
+import { DEFAULT_CURRENCY } from 'src/utility/conts';
+import { Split } from 'src/expenses/split.entity';
 
 @Entity('users')
 @Unique(['user_uid'])
@@ -35,11 +38,20 @@ export class User {
   @Column({ type: 'varchar', length: 20, nullable: true })
   phone: string;
 
-  @Column({ type: 'char', length: 3, default: 'USD' })
+  @Column({ type: 'char', length: 3, default: DEFAULT_CURRENCY })
   default_currency: string;
 
-  @OneToMany(() => UserRefreshTokens, (token) => token.user)
-  refresh_tokens: UserRefreshTokens[];
+  @OneToMany(() => UserRefreshToken, (token) => token.user)
+  refresh_tokens: UserRefreshToken[];
+
+  @OneToMany(() => Expense, (expense) => expense.addedBy)
+  added_expenses: Expense[];
+
+  @OneToMany(() => Expense, (expense) => expense.payer)
+  paid_expenses: Expense[];
+
+  @OneToMany(() => Split, (split) => split.member)
+  split_member: Split[];
 
   @CreateDateColumn({
     type: 'timestamptz',

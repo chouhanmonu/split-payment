@@ -4,3 +4,4 @@ export const JWT_HASH_SALT = 10;
 export const JWT_ISSUER = 'split-payment-llp';
 export const JWT_AUDIENCE = 'split-payment-app';
 export const JWT_ALGORITHM = 'RS256';
+export const DEFAULT_CURRENCY = 'USD';

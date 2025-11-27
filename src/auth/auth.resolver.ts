@@ -11,8 +11,9 @@ import type { AppJwtPayload } from 'src/types/auth';
 import { Response } from 'src/utility/global.model';
 import { ResetPassordInput } from './dto/resetPassword.input';
 import { RestoreMeInput } from './dto/restoreMe.input';
-import { RequestMeta } from 'src/global/app.decorator';
-import type { RequestMetadata } from 'src/types/request';
+import { RequestMeta } from 'src/global/requestMeta/requestMeta.decorator';
+import { RequestMetaInput } from 'src/global/dto/requestMeta.input';
+import { RequestMetaValidationPipe } from 'src/global/requestMetaValidation/requestMetaValidation.pipe';
 
 @Resolver()
 export class AuthResolver {
@@ -29,7 +30,8 @@ export class AuthResolver {
   @Mutation(() => LoginResponse)
   login(
     @Args('loginInput') loginInput: LoginInput,
-    @RequestMeta() RequestMetadata: RequestMetadata,
+    @RequestMeta(new RequestMetaValidationPipe())
+    RequestMetadata: RequestMetaInput,
   ) {
     return this.authService.login(loginInput, RequestMetadata);
   }
@@ -37,7 +39,8 @@ export class AuthResolver {
   @Mutation(() => RefreshTokensResponse)
   refreshTokens(
     @User() user: AppJwtPayload,
-    @RequestMeta() requestMetadata: RequestMetadata,
+    @RequestMeta(new RequestMetaValidationPipe())
+    requestMetadata: RequestMetaInput,
   ) {
     return this.authService.refreshTokens(user, requestMetadata);
   }
@@ -45,7 +48,8 @@ export class AuthResolver {
   @Mutation(() => Response)
   async logout(
     @User() user: AppJwtPayload,
-    @RequestMeta() requestMetadata: RequestMetadata,
+    @RequestMeta(new RequestMetaValidationPipe())
+    requestMetadata: RequestMetaInput,
   ) {
     await this.authService.logout(user, requestMetadata);
     return {

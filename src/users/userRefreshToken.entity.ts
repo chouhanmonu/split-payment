@@ -1,7 +1,6 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -14,7 +13,7 @@ import { User } from './user.entity';
 @Entity('user_refresh_tokens')
 @Unique(['user', 'device_id'])
 @Unique(['refresh_token_jti'])
-export class UserRefreshTokens {
+export class UserRefreshToken {
   @PrimaryGeneratedColumn()
   id: number;
 
