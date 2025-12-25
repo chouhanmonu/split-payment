@@ -1,98 +1,163 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Split Payments
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+An intuitive app that streamlines splitting and tracking shared expenses among friends.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Project Overview
 
-## Description
+Developed a user-centric mobile application for effortlessly splitting and tracking shared expenses among friends, families, or groups. Drawing from real-world frustrations with existing apps, like clunky interfaces and intrusive ads, this solution prioritizes simplicity, speed, and security to make financial collaboration feel natural and hassle-free, supporting everything from casual dinners to trip budgets.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Key Features
 
-## Project setup
+- **Seamless User Onboarding**: Quick login/signup via email, Google OAuth, or multi-device support, with asymmetric JWT tokens for secure, stateless authentication.
+- **Intuitive Group Management**: Create groups in seconds, add members using unique, human-readable IDs, and track balances with clear visualizations of owed/borrowed amounts.
+- **Effortless Transaction Handling**: One-tap expense entry, automatic splitting algorithms (e.g., equal or custom shares), and real-time balance updates to avoid disputes.
+- **Ad-Free Experience**: No disruptive ads; instead, a generous daily limit on free transactions to encourage organic use without aggressive monetization.
+- **Accessibility-Focused UI**: Clean, age-agnostic design ensuring ease for all users, from tech-savvy millennials to less digital-native seniors.
 
-```bash
-$ npm install
-```
+Here’s a clean **Getting Started** section you can drop directly into your project README. I’ve structured it clearly and used **placeholders** for sensitive values while still explaining Google SMTP and OpenSSL-based asymmetric JWT setup.
 
-## Compile and run the project
+## Getting Started
+
+### Prerequisites
+
+Before setting up the project, ensure you have the following installed on your system:
+
+- **Node.js** ≥ 18.x
+- **npm** ≥ 9.x (or yarn/pnpm if you prefer)
+- **PostgreSQL** ≥ 14
+- **OpenSSL** (for generating asymmetric JWT keys)
+- A **Google account** with SMTP access enabled (App Password required)
+- **NestJS CLI** (optional but recommended)
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install -g @nestjs/cli
 ```
 
-## Run tests
+---
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd split-payment
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+---
+
+### Configuration
+
+Create a `.env` file in the root of the project and configure the following environment variables.
+
+#### Application
+
+```env
+WEB_APP_URL=https://your-frontend-url.com // optional
+```
+
+#### Email
+
+```env
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-google-app-password
+EMAIL_FROM="APP NAME <your-email@gmail.com>"
+```
+
+#### Database (PostgreSQL)
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your-db-password
+DB_NAME=split_payment
+```
+
+Make sure the database exists before running the app:
+
+```sql
+CREATE DATABASE split_payment;
+```
+
+---
+
+#### JWT (Asymmetric Keys)
+
+This project uses **asymmetric JWT signing (RS256)** with a **public/private key pair** generated using OpenSSL.
+
+##### Generate Keys
 
 ```bash
-# unit tests
-$ npm run test
+# Generate private key
+openssl genrsa -out jwt-private.key 2048
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Generate public key
+openssl rsa -in jwt-private.key -pubout -out jwt-public.key
 ```
 
-## Deployment
+##### Add Keys to `.env`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+> Keys must be **multiline** and preserved exactly as generated.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+```env
+JWT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
+YOUR_PRIVATE_KEY_CONTENT
+-----END PRIVATE KEY-----"
+
+JWT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
+YOUR_PUBLIC_KEY_CONTENT
+-----END PUBLIC KEY-----"
+```
+
+These keys are used for:
+
+- Signing JWTs with the **private key**
+- Verifying JWTs with the **public key**
+
+---
+
+### Running Locally
+
+#### Development Mode (Watch)
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+#### Debug Mode
 
-## Resources
+```bash
+npm run start:debug
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+#### Production Build
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm run build
+npm run start:prod
+```
 
-## Support
+The server will start at:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+http://localhost:3000
+```
 
-## Stay in touch
+GraphQL playground (if enabled):
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+http://localhost:3000/graphql
+```
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+✅ You’re now ready to run the **Split Payment** backend locally.
