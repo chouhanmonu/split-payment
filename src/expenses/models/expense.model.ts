@@ -21,7 +21,7 @@ export class ExpenseModel {
   payer: UserModel;
 
   @Field(() => SplitType)
-  split_type: SplitType;
+  splitType: SplitType;
 
   @Field()
   currency: string;
@@ -33,11 +33,11 @@ export class ExpenseModel {
   splits: SplitModel[];
 
   @Field()
-  created_at: Date;
+  createdAt: Date;
 
   @Field()
-  updated_at: Date;
+  updatedAt: Date;
 
   @Field({ nullable: true })
-  deleted_at?: Date;
+  deletedAt?: Date;
 }

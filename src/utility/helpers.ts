@@ -1,4 +1,5 @@
 import { customAlphabet } from 'nanoid';
+import { SplitInput } from 'src/expenses/dto/addExpense.input';
 
 export const generateUserUid = (name?: string) => {
   const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 6);
@@ -10,3 +11,7 @@ export const generateUserUid = (name?: string) => {
     : 'user';
   return `${prefix}_${nanoid()}`;
 };
+
+export function getSplitsValueTotal(splits: SplitInput[]) {
+  return splits.reduce((a, c) => a + c.value, 0);
+}

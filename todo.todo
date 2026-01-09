@@ -1,3 +1,6 @@
+Priority:
+  ☐ use camelCase everywhere
+
 Security:
   ☐ Implement rate limiting
   ☐ add max no. of login attempts for login form to prevent brute-force attack & add captcha support

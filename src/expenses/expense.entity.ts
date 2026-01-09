@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -31,11 +30,9 @@ export class Expense {
   @ManyToOne(() => User, (user) => user.added_expenses, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'added_by' })
   addedBy: User;
 
   @ManyToOne(() => User, (user) => user.paid_expenses)
-  @JoinColumn({ name: 'payer_id' })
   payer: User;
 
   // @ManyToOne(() => Group, { nullable: true })
@@ -47,7 +44,7 @@ export class Expense {
     enum: SplitType,
     default: SplitType.EQUAL,
   })
-  split_type: SplitType;
+  splitType: SplitType;
 
   @Column({
     type: 'char',
@@ -66,14 +63,14 @@ export class Expense {
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
-  updated_at: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })
-  deleted_at?: Date;
+  deletedAt?: Date;
 }

@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   Check,
@@ -17,12 +16,12 @@ export class Split {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Expense, (expense) => expense.splits)
-  @JoinColumn({ name: 'expense_id' })
+  @ManyToOne(() => Expense, (expense) => expense.splits, {
+    onDelete: 'CASCADE',
+  })
   expense: Expense;
 
   @ManyToOne(() => User, (user) => user.split_member)
-  @JoinColumn({ name: 'member_id' })
   member: User;
 
   @Column({
@@ -30,7 +29,7 @@ export class Split {
     enum: SplitValueType,
     default: SplitValueType.PERCENT,
   })
-  value_type: SplitValueType;
+  valueType: SplitValueType;
 
   @Column({ type: 'numeric', precision: 10, scale: 2 })
   value: number;
@@ -39,5 +38,5 @@ export class Split {
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
-  created_at: Date;
+  createdAt: Date;
 }

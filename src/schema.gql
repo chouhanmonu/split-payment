@@ -3,7 +3,14 @@
 # ------------------------------------------------------
 
 input AddExpenseInput {
+  amount: Float!
+  currency: String! = "USD"
   description: String!
+  note: String
+  payerId: Int!
+  splitType: SplitType! = EQUAL
+  splitValueType: SplitValueType! = PERCENT
+  splits: [SplitInput!]!
 }
 
 input CreateUserInput {
@@ -24,16 +31,16 @@ scalar DateTime
 type ExpenseModel {
   addedBy: UserModel!
   amount: Float!
-  created_at: DateTime!
+  createdAt: DateTime!
   currency: String!
-  deleted_at: DateTime
+  deletedAt: DateTime
   description: String!
   id: ID!
   note: String
   payer: UserModel!
-  split_type: SplitType!
+  splitType: SplitType!
   splits: [SplitModel!]!
-  updated_at: DateTime!
+  updatedAt: DateTime!
 }
 
 type ExpiresIn {
@@ -99,12 +106,18 @@ input RestoreMeInput {
   token: String!
 }
 
+input SplitInput {
+  memberId: Int!
+  value: Float!
+}
+
 type SplitModel {
-  created_at: DateTime!
+  createdAt: DateTime!
+  expense: ExpenseModel!
   id: ID!
   member: UserModel!
   value: Float!
-  value_type: SplitValueType!
+  valueType: SplitValueType!
 }
 
 """Type of split (equal or unequal)"""
