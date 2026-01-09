@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
@@ -11,42 +10,41 @@ import {
 import { User } from './user.entity';
 
 @Entity('user_refresh_tokens')
-@Unique(['user', 'device_id'])
-@Unique(['refresh_token_jti'])
+@Unique(['user', 'deviceId'])
+@Unique(['refreshTokenJti'])
 export class UserRefreshToken {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.refresh_tokens, {
+  @ManyToOne(() => User, (user) => user.refreshTokens, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @Column({ type: 'varchar', length: 64 })
-  device_id: string;
+  deviceId: string;
 
   @Column({ type: 'char', length: 36, nullable: true })
-  refresh_token_jti: string | null;
+  refreshTokenJti: string | null;
 
   @Column({ type: 'inet', nullable: true })
-  ip_address: string | null;
+  ipAddress: string | null;
 
   @Column({ type: 'text', nullable: true })
-  user_agent: string | null;
+  userAgent: string | null;
 
   @Column({ type: 'timestamptz', nullable: true })
-  expires_at: Date | null;
+  expiresAt: Date | null;
 
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
-  updated_at: Date;
+  updatedAt: Date;
 }

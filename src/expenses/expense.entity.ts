@@ -27,12 +27,12 @@ export class Expense {
   @Column({ type: 'numeric', precision: 10, scale: 2 })
   amount: number;
 
-  @ManyToOne(() => User, (user) => user.added_expenses, {
+  @ManyToOne(() => User, (user) => user.addedExpenses, {
     onDelete: 'CASCADE',
   })
   addedBy: User;
 
-  @ManyToOne(() => User, (user) => user.paid_expenses)
+  @ManyToOne(() => User, (user) => user.paidExpenses)
   payer: User;
 
   // @ManyToOne(() => Group, { nullable: true })

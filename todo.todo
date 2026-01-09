@@ -1,8 +1,9 @@
 Priority:
-  ☐ use camelCase everywhere
+  ✔ use camelCase everywhere @done (09/01/2026, 08:33:35)
 
 Security:
   ☐ Implement rate limiting
+    move request device data to table `user_devices` from `user_refresh_tokens` and ...
   ☐ add max no. of login attempts for login form to prevent brute-force attack & add captcha support
     Rate limit and throttle logins per IP and per account.
     Many failed logins for the same account or IP over a short time. (track failed login attempts)

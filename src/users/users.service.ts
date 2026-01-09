@@ -44,8 +44,8 @@ export class UsersService {
   }
 
   async create(newUserInput: CreateUserInput) {
-    if (!newUserInput?.user_uid)
-      newUserInput.user_uid = generateUserUid(
+    if (!newUserInput?.userUid)
+      newUserInput.userUid = generateUserUid(
         newUserInput.name?.split?.(' ')?.at?.(0),
       );
 
@@ -55,7 +55,7 @@ export class UsersService {
 
     const userEntity = this.userRepository.create({
       ...newUserInput,
-      password_hash: newUserInput.password,
+      passwordHash: newUserInput.password,
     });
     return this.userRepository.save(userEntity);
   }
@@ -68,7 +68,7 @@ export class UsersService {
 
     const user = await this.userRepository.preload({
       id,
-      password_hash: updateUserInput.password,
+      passwordHash: updateUserInput.password,
       ...updateUserInput,
     });
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
@@ -84,7 +84,7 @@ export class UsersService {
     if (!user)
       throw new NotFoundException(`User with email ${email} not found`);
 
-    const match = await bcrypt.compare(password, user.password_hash);
+    const match = await bcrypt.compare(password, user.passwordHash);
     if (!match) throw new UnauthorizedException();
 
     return this.userRepository.softRemove(user);

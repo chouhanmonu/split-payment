@@ -86,5 +86,3 @@ export class ExpensesService {
     });
   }
 }
-
-// continue https://chatgpt.com/c/692f18f2-f8a4-8322-84d9-586fbc360658

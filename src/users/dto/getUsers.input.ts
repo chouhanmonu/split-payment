@@ -22,7 +22,7 @@ class UserOrderInput {
   name?: 'ASC' | 'DESC';
 
   @Field({ nullable: true })
-  created_at?: 'ASC' | 'DESC';
+  createdAt?: 'ASC' | 'DESC';
 }
 
 @InputType()

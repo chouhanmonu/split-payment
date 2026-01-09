@@ -14,14 +14,14 @@ import { DEFAULT_CURRENCY } from 'src/utility/conts';
 import { Split } from 'src/expenses/split.entity';
 
 @Entity('users')
-@Unique(['user_uid'])
+@Unique(['userUid'])
 @Unique(['email'])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar', length: 30, unique: true })
-  user_uid: string;
+  userUid: string;
 
   @Column({ type: 'varchar', length: 100 })
   name: string;
@@ -30,41 +30,41 @@ export class User {
   email: string;
 
   @Column({ type: 'varchar', length: 255 })
-  password_hash: string;
+  passwordHash: string;
 
   @Column({ type: 'varchar', length: 512, nullable: true })
-  profile_picture_url: string;
+  profilePictureUrl: string;
 
   @Column({ type: 'varchar', length: 20, nullable: true })
   phone: string;
 
   @Column({ type: 'char', length: 3, default: DEFAULT_CURRENCY })
-  default_currency: string;
+  defaultCurrency: string;
 
   @OneToMany(() => UserRefreshToken, (token) => token.user)
-  refresh_tokens: UserRefreshToken[];
+  refreshTokens: UserRefreshToken[];
 
   @OneToMany(() => Expense, (expense) => expense.addedBy)
-  added_expenses: Expense[];
+  addedExpenses: Expense[];
 
   @OneToMany(() => Expense, (expense) => expense.payer)
-  paid_expenses: Expense[];
+  paidExpenses: Expense[];
 
   @OneToMany(() => Split, (split) => split.member)
-  split_member: Split[];
+  splitMember: Split[];
 
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
-  updated_at: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })
-  deleted_at: Date | null;
+  deletedAt: Date | null;
 }

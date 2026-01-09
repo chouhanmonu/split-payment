@@ -6,7 +6,7 @@ export class CreateUserInput {
   @Field({ nullable: true })
   @IsOptional()
   @MaxLength(30)
-  user_uid: string;
+  userUid: string;
 
   @Field()
   @MaxLength(100)
@@ -24,7 +24,7 @@ export class CreateUserInput {
   @Field({ nullable: true })
   @IsOptional()
   @MaxLength(512)
-  profile_picture_url?: string;
+  profilePictureUrl?: string;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -34,5 +34,5 @@ export class CreateUserInput {
   @Field({ nullable: true })
   @IsOptional()
   @Length(3, 3)
-  default_currency: string;
+  defaultCurrency: string;
 }

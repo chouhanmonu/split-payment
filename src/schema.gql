@@ -14,13 +14,13 @@ input AddExpenseInput {
 }
 
 input CreateUserInput {
-  default_currency: String
+  defaultCurrency: String
   email: String!
   name: String!
   password: String!
   phone: String
-  profile_picture_url: String
-  user_uid: String
+  profilePictureUrl: String
+  userUid: String
 }
 
 """
@@ -142,30 +142,30 @@ input StringFilter {
 }
 
 input UpdateUserInput {
-  default_currency: String
+  defaultCurrency: String
   email: String
   name: String
   password: String
   phone: String
-  profile_picture_url: String
-  user_uid: String
+  profilePictureUrl: String
+  userUid: String
 }
 
 type UserModel {
-  created_at: DateTime!
-  default_currency: String!
-  deleted_at: DateTime
+  createdAt: DateTime!
+  defaultCurrency: String!
+  deletedAt: DateTime
   email: String!
   id: ID!
   name: String!
   phone: String
-  profile_picture_url: String
-  updated_at: DateTime!
-  user_uid: String!
+  profilePictureUrl: String
+  updatedAt: DateTime!
+  userUid: String!
 }
 
 input UserOrderInput {
-  created_at: String
+  createdAt: String
   name: String
 }
 

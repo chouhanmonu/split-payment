@@ -6,7 +6,7 @@ export class UpdateUserInput {
   @Field({ nullable: true })
   @IsOptional()
   @MaxLength(30)
-  user_uid: string;
+  userUid: string;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -27,7 +27,7 @@ export class UpdateUserInput {
   @Field({ nullable: true })
   @IsOptional()
   @MaxLength(512)
-  profile_picture_url?: string;
+  profilePictureUrl?: string;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -37,5 +37,5 @@ export class UpdateUserInput {
   @Field({ nullable: true })
   @IsOptional()
   @Length(3, 3)
-  default_currency: string;
+  defaultCurrency: string;
 }

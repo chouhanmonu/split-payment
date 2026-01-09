@@ -6,7 +6,7 @@ export class UserModel {
   id: number;
 
   @Field()
-  user_uid: string;
+  userUid: string;
 
   @Field()
   name: string;
@@ -15,20 +15,20 @@ export class UserModel {
   email: string;
 
   @Field({ nullable: true })
-  profile_picture_url?: string;
+  profilePictureUrl?: string;
 
   @Field({ nullable: true })
   phone?: string;
 
   @Field()
-  default_currency: string;
+  defaultCurrency: string;
 
   @Field(() => Date)
-  created_at: Date;
+  createdAt: Date;
 
   @Field(() => Date)
-  updated_at: Date;
+  updatedAt: Date;
 
   @Field(() => Date, { nullable: true })
-  deleted_at?: Date;
+  deletedAt?: Date;
 }

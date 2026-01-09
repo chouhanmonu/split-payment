@@ -47,7 +47,7 @@ export class AuthService {
   generateTokens(user: User) {
     const payload: AppJwtPayload = {
       sub: user.id?.toString?.(),
-      userUid: user.user_uid,
+      userUid: user.userUid,
       name: user.name,
       email: user.email,
       role: 'user',
@@ -79,14 +79,14 @@ export class AuthService {
     return this.userRefreshTokenRepository.upsert(
       {
         user,
-        device_id: requestMetadata.deviceId,
-        refresh_token_jti: payload.jti,
-        user_agent: requestMetadata.userAgent,
-        ip_address: requestMetadata.ip,
-        expires_at: new Date((payload.exp as number) * 1000),
+        deviceId: requestMetadata.deviceId,
+        refreshTokenJti: payload.jti,
+        userAgent: requestMetadata.userAgent,
+        ipAddress: requestMetadata.ip,
+        expiresAt: new Date((payload.exp as number) * 1000),
       },
       {
-        conflictPaths: ['user', 'device_id'],
+        conflictPaths: ['user', 'deviceId'],
         skipUpdateIfNoValuesChanged: true,
       },
     );
@@ -101,7 +101,7 @@ export class AuthService {
     if (!user)
       throw new NotFoundException(`User with email ${email} not found`);
 
-    const match = await bcrypt.compare(password, user.password_hash);
+    const match = await bcrypt.compare(password, user.passwordHash);
     if (!match) throw new UnauthorizedException();
 
     const { token, refreshToken } = this.generateTokens(user);
@@ -124,15 +124,15 @@ export class AuthService {
   ) {
     const user = await this.userRepository.findOne({
       where: { id: Number(userPayload.sub) },
-      relations: ['refresh_tokens'],
+      relations: ['refreshTokens'],
     });
     if (!user) throw new NotFoundException();
 
     if (
-      user.refresh_tokens.findIndex(
+      user.refreshTokens.findIndex(
         (token) =>
-          token.device_id === requestMetadata.deviceId &&
-          token.refresh_token_jti === userPayload.jti,
+          token.deviceId === requestMetadata.deviceId &&
+          token.refreshTokenJti === userPayload.jti,
       ) === -1
     )
       throw new ForbiddenException();
@@ -151,18 +151,18 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({
       where: { id: Number(sub) },
-      relations: ['refresh_tokens'],
+      relations: ['refreshTokens'],
     });
     if (!user) throw new NotFoundException();
 
-    const correspondingToken = user.refresh_tokens?.find?.(
-      (token) => token.device_id === requestMetadata.deviceId,
+    const correspondingToken = user.refreshTokens?.find?.(
+      (token) => token.deviceId === requestMetadata.deviceId,
     );
     if (!correspondingToken) throw new NotFoundException();
 
     return this.userRefreshTokenRepository.save({
       ...correspondingToken,
-      refresh_token_jti: null,
+      refreshTokenJti: null,
     });
   }
 
@@ -187,12 +187,12 @@ export class AuthService {
       withDeleted: true,
     });
     if (!user) throw new NotFoundException();
-    if (user.deleted_at) await this.userRepository.restore(user.id);
+    if (user.deletedAt) await this.userRepository.restore(user.id);
 
     const newPassword = await UsersService.hashPassord(password);
     const updateUserEntity = await this.userRepository.preload({
       id: user.id,
-      password_hash: newPassword,
+      passwordHash: newPassword,
     });
     if (!updateUserEntity) throw new NotFoundException();
 
