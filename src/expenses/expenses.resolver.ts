@@ -1,6 +1,6 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { ExpensesService } from './expenses.service';
-import { AddExpenseInput } from './dto/addExpense.input';
+import { AddExpenseInput } from './dto/add-expense.input';
 import { ExpenseModel } from './models/expense.model';
 import { User } from 'src/auth/auth.decorator';
 import type { AppJwtPayload } from 'src/types/auth';

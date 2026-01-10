@@ -8,11 +8,11 @@ import {
   Unique,
   OneToMany,
 } from 'typeorm';
-import { UserRefreshToken } from './userRefreshToken.entity';
+import { UserRefreshToken } from './user-refresh-token.entity';
 import { Expense } from 'src/expenses/expense.entity';
 import { DEFAULT_CURRENCY } from 'src/utility/conts';
 import { Split } from 'src/expenses/split.entity';
-import { UserOnGroup } from 'src/groups/userOnGroup.entity';
+import { UserOnGroup } from 'src/groups/user-on-group.entity';
 import { Group } from 'src/groups/group.entity';
 
 @Entity('users')

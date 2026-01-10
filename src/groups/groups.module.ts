@@ -3,7 +3,7 @@ import { GroupsResolver } from './groups.resolver';
 import { GroupsService } from './groups.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Group } from './group.entity';
-import { UserOnGroup } from './userOnGroup.entity';
+import { UserOnGroup } from './user-on-group.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Group, UserOnGroup])],

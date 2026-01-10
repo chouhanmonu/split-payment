@@ -2,7 +2,7 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { plainToInstance } from 'class-transformer';
 import { UAParser } from 'ua-parser-js';
-import { RequestMetaInput } from '../dto/requestMeta.input';
+import { RequestMetaInput } from '../dto/request-meta.input';
 
 export const RequestMeta = createParamDecorator(
   (data: unknown, context: ExecutionContext): RequestMetaInput => {

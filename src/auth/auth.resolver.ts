@@ -1,19 +1,19 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { CreateUserInput } from 'src/users/dto/createUser.input';
+import { CreateUserInput } from 'src/users/dto/create-user.input';
 import { UserModel } from 'src/users/models/user.model';
 import { UsersService } from 'src/users/users.service';
-import { LoginResponse } from './models/loginResponse.model';
+import { LoginResponse } from './models/login-response.model';
 import { AuthService } from './auth.service';
 import { LoginInput } from './dto/login.input';
-import { RefreshTokensResponse } from './models/refreshTokensResponse.model';
+import { RefreshTokensResponse } from './models/refresh-tokens-response.model';
 import { User } from './auth.decorator';
 import type { AppJwtPayload } from 'src/types/auth';
 import { Response } from 'src/utility/global.model';
-import { ResetPassordInput } from './dto/resetPassword.input';
-import { RestoreMeInput } from './dto/restoreMe.input';
-import { RequestMeta } from 'src/global/requestMeta/requestMeta.decorator';
-import { RequestMetaInput } from 'src/global/dto/requestMeta.input';
-import { RequestMetaValidationPipe } from 'src/global/requestMetaValidation/requestMetaValidation.pipe';
+import { ResetPassordInput } from './dto/reset-password.input';
+import { RestoreMeInput } from './dto/restore-me.input';
+import { RequestMeta } from 'src/global/request-meta/request-meta.decorator';
+import { RequestMetaInput } from 'src/global/dto/request-meta.input';
+import { RequestMetaValidationPipe } from 'src/global/request-meta-validation/request-meta-validation.pipe';
 
 @Resolver()
 export class AuthResolver {

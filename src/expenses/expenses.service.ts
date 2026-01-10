@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AddExpenseInput } from './dto/addExpense.input';
+import { AddExpenseInput } from './dto/add-expense.input';
 import { DataSource, In, Repository } from 'typeorm';
 import { Expense } from './expense.entity';
 import { InjectRepository } from '@nestjs/typeorm';

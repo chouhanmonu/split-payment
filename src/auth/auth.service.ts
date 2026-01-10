@@ -22,15 +22,15 @@ import ms from 'ms';
 import { LoginInput } from './dto/login.input';
 import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from 'src/users/users.service';
-import { ResetPassordInput } from './dto/resetPassword.input';
+import { ResetPassordInput } from './dto/reset-password.input';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { randomBytes } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from 'src/email/email.service';
 import _ from 'lodash';
-import { RestoreMeInput } from './dto/restoreMe.input';
-import { UserRefreshToken } from 'src/users/userRefreshToken.entity';
-import { RequestMetaInput } from 'src/global/dto/requestMeta.input';
+import { RestoreMeInput } from './dto/restore-me.input';
+import { UserRefreshToken } from 'src/users/user-refresh-token.entity';
+import { RequestMetaInput } from 'src/global/dto/request-meta.input';
 @Injectable()
 export class AuthService {
   constructor(

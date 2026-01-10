@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-import { RequestMetaInput } from '../dto/requestMeta.input';
+import { RequestMetaInput } from '../dto/request-meta.input';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 

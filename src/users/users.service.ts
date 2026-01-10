@@ -6,12 +6,12 @@ import {
 import { FindManyOptions, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserInput } from './dto/createUser.input';
+import { CreateUserInput } from './dto/create-user.input';
 import { generateUserUid } from 'src/utility/helpers';
 import * as bcrypt from 'bcrypt';
-import { UpdateUserInput } from './dto/updateUser.input';
+import { UpdateUserInput } from './dto/update-user.input';
 import { UserModel } from './models/user.model';
-import { FindUsersInput } from './dto/getUsers.input';
+import { FindUsersInput } from './dto/get-users.input';
 import { buildWhere } from 'src/utility/input-types';
 import { JWT_HASH_SALT } from 'src/utility/conts';
 

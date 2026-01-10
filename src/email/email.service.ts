@@ -47,7 +47,7 @@ export class EmailService {
         to: email,
         from: this.emailFrom,
         subject: subject,
-        template: 'resetPassword',
+        template: 'reset-password',
         context: {
           subject: subject,
           name: name,

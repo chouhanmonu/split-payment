@@ -1,4 +1,4 @@
-import { RequestMetaValidationPipe } from './requestMetaValidation.pipe';
+import { RequestMetaValidationPipe } from './request-meta-validation.pipe';
 
 describe('RequestMetaValidationPipe', () => {
   it('should be defined', () => {

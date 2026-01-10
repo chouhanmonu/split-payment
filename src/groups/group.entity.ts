@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { User } from 'src/users/user.entity';
 import { DEFAULT_CURRENCY } from 'src/utility/conts';
-import { UserOnGroup } from './userOnGroup.entity';
+import { UserOnGroup } from './user-on-group.entity';
 
 @Entity('groups')
 export class Group {

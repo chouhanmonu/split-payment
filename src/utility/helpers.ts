@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid';
-import { SplitInput } from 'src/expenses/dto/addExpense.input';
+import { SplitInput } from 'src/expenses/dto/add-expense.input';
 
 export const generateUserUid = (name?: string) => {
   const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 6);
