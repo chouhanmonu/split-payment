@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
@@ -19,30 +20,38 @@ export class UserRefreshToken {
   @ManyToOne(() => User, (user) => user.refreshTokens, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ type: 'varchar', length: 64 })
+  @Column({ name: 'device_id', type: 'varchar', length: 64 })
   deviceId: string;
 
-  @Column({ type: 'char', length: 36, nullable: true })
+  @Column({
+    name: 'refresh_token_jti',
+    type: 'char',
+    length: 36,
+    nullable: true,
+  })
   refreshTokenJti: string | null;
 
-  @Column({ type: 'inet', nullable: true })
+  @Column({ name: 'ip_address', type: 'inet', nullable: true })
   ipAddress: string | null;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ name: 'user_agent', type: 'text', nullable: true })
   userAgent: string | null;
 
-  @Column({ type: 'timestamptz', nullable: true })
+  @Column({ name: 'expires_at', type: 'timestamptz', nullable: true })
   expiresAt: Date | null;
 
   @CreateDateColumn({
+    name: 'created_at',
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
   createdAt: Date;
 
   @UpdateDateColumn({
+    name: 'updated_at',
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })

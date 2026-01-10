@@ -22,7 +22,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 30, unique: true })
+  @Column({ name: 'user_uid', type: 'varchar', length: 30, unique: true })
   userUid: string;
 
   @Column({ type: 'varchar', length: 100 })
@@ -31,16 +31,26 @@ export class User {
   @Column({ type: 'varchar', length: 254, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ name: 'password_hash', type: 'varchar', length: 255 })
   passwordHash: string;
 
-  @Column({ type: 'varchar', length: 512, nullable: true })
+  @Column({
+    name: 'profile_picture_url',
+    type: 'varchar',
+    length: 512,
+    nullable: true,
+  })
   profilePictureUrl: string;
 
   @Column({ type: 'varchar', length: 20, nullable: true })
   phone: string;
 
-  @Column({ type: 'char', length: 3, default: DEFAULT_CURRENCY })
+  @Column({
+    name: 'default_currency',
+    type: 'char',
+    length: 3,
+    default: DEFAULT_CURRENCY,
+  })
   defaultCurrency: string;
 
   @OneToMany(() => UserRefreshToken, (token) => token.user)
@@ -62,17 +72,19 @@ export class User {
   createdGroups: Group[];
 
   @CreateDateColumn({
+    name: 'created_at',
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
   createdAt: Date;
 
   @UpdateDateColumn({
+    name: 'updated_at',
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
   updatedAt: Date;
 
-  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
   deletedAt: Date | null;
 }

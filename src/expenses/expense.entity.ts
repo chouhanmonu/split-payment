@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   Check,
+  JoinColumn,
 } from 'typeorm';
 import { User } from 'src/users/user.entity';
 // import { Group } from 'src/groups/group.entity';
@@ -30,9 +31,11 @@ export class Expense {
   @ManyToOne(() => User, (user) => user.addedExpenses, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'added_by_id' })
   addedBy: User;
 
   @ManyToOne(() => User, (user) => user.paidExpenses)
+  @JoinColumn({ name: 'payer_id' })
   payer: User;
 
   // @ManyToOne(() => Group, { nullable: true })
@@ -40,6 +43,7 @@ export class Expense {
   // group?: Group;
 
   @Column({
+    name: 'split_type',
     type: 'enum',
     enum: SplitType,
     default: SplitType.EQUAL,
@@ -60,17 +64,19 @@ export class Expense {
   splits: Split[];
 
   @CreateDateColumn({
+    name: 'created_at',
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
   createdAt: Date;
 
   @UpdateDateColumn({
+    name: 'updated_at',
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
   updatedAt: Date;
 
-  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
   deletedAt?: Date;
 }

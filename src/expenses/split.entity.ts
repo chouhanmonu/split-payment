@@ -5,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   Check,
+  JoinColumn,
 } from 'typeorm';
 import { Expense } from 'src/expenses/expense.entity';
 import { User } from 'src/users/user.entity';
@@ -19,12 +20,15 @@ export class Split {
   @ManyToOne(() => Expense, (expense) => expense.splits, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'expense_id' })
   expense: Expense;
 
   @ManyToOne(() => User, (user) => user.splitMembers)
+  @JoinColumn({ name: 'member_id' })
   member: User;
 
   @Column({
+    name: 'value_type',
     type: 'enum',
     enum: SplitValueType,
     default: SplitValueType.PERCENT,
@@ -35,6 +39,7 @@ export class Split {
   value: number;
 
   @CreateDateColumn({
+    name: 'created_at',
     type: 'timestamptz',
     default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
