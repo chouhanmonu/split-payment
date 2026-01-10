@@ -21,7 +21,7 @@ export class Split {
   })
   expense: Expense;
 
-  @ManyToOne(() => User, (user) => user.splitMember)
+  @ManyToOne(() => User, (user) => user.splitMembers)
   member: User;
 
   @Column({

@@ -12,6 +12,8 @@ import { UserRefreshToken } from './userRefreshToken.entity';
 import { Expense } from 'src/expenses/expense.entity';
 import { DEFAULT_CURRENCY } from 'src/utility/conts';
 import { Split } from 'src/expenses/split.entity';
+import { UserOnGroup } from 'src/groups/userOnGroup.entity';
+import { Group } from 'src/groups/group.entity';
 
 @Entity('users')
 @Unique(['userUid'])
@@ -51,7 +53,13 @@ export class User {
   paidExpenses: Expense[];
 
   @OneToMany(() => Split, (split) => split.member)
-  splitMember: Split[];
+  splitMembers: Split[];
+
+  @OneToMany(() => UserOnGroup, (userOnGroup) => userOnGroup.userId)
+  groupMemberships: UserOnGroup[];
+
+  @OneToMany(() => Group, (group) => group.createdBy)
+  createdGroups: Group[];
 
   @CreateDateColumn({
     type: 'timestamptz',

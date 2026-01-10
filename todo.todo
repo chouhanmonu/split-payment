@@ -13,6 +13,9 @@ Others:
   ✔ env for environments @done (10/22/2025, 8:47:34 PM)
   ☐ use swagger for api documentation
 
+CheckList:
+  ☐ check if an user is deleted then what should happen if that user exists in a group, ..
+
 Also:
   ☐ enable row level security in pg
   ☐ use redis as cache store

@@ -23,6 +23,7 @@ import { TasksService } from './tasks/tasks.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { GraphQLError } from 'graphql';
 import { ExpensesModule } from './expenses/expenses.module';
+import { GroupsModule } from './groups/groups.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -80,6 +81,7 @@ import { ExpensesModule } from './expenses/expenses.module';
     UsersModule,
     AuthModule,
     ExpensesModule,
+    GroupsModule,
   ],
   controllers: [AppController],
   providers: [
