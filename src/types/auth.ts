@@ -1,4 +1,4 @@
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { JwtPayload as BaseJwtPayload } from 'jsonwebtoken';
 
 export type LoginResult = {

@@ -3,13 +3,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AddExpenseInput } from './dto/add-expense.input';
+import { AddExpenseInput } from './inputs/add-expense.input';
 import { DataSource, In, Repository } from 'typeorm';
-import { Expense } from './expense.entity';
+import { Expense } from './entities/expense.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppJwtPayload } from 'src/types/auth';
-import { User } from 'src/users/user.entity';
-import { Split } from './split.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Split } from './entities/split.entity';
 import { SplitType, SplitValueType } from 'src/types/expense';
 import { getSplitsValueTotal } from 'src/utility/helpers';
 @Injectable()

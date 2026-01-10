@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { Expense } from './expense.entity';
-import { Split } from './split.entity';
+import { Split } from './entities/split.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ExpensesResolver } from './expenses.resolver';
 import { ExpensesService } from './expenses.service';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Expense } from './entities/expense.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Expense, Split, User])],

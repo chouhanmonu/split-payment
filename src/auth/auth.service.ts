@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,18 +19,18 @@ import {
   JWT_REFRESH_EXPIRES_IN,
 } from 'src/utility/conts';
 import ms from 'ms';
-import { LoginInput } from './dto/login.input';
+import { LoginInput } from './inputs/login.input';
 import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from 'src/users/users.service';
-import { ResetPassordInput } from './dto/reset-password.input';
+import { ResetPassordInput } from './inputs/reset-password.input';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { randomBytes } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from 'src/email/email.service';
 import _ from 'lodash';
-import { RestoreMeInput } from './dto/restore-me.input';
-import { UserRefreshToken } from 'src/users/user-refresh-token.entity';
+import { RestoreMeInput } from './inputs/restore-me.input';
 import { RequestMetaInput } from 'src/global/dto/request-meta.input';
+import { UserRefreshToken } from 'src/users/entities/user-refresh-token.entity';
 @Injectable()
 export class AuthService {
   constructor(

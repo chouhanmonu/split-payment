@@ -4,14 +4,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { FindManyOptions, Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserInput } from './dto/create-user.input';
+import { CreateUserInput } from './inputs/create-user.input';
 import { generateUserUid } from 'src/utility/helpers';
 import * as bcrypt from 'bcrypt';
-import { UpdateUserInput } from './dto/update-user.input';
+import { UpdateUserInput } from './inputs/update-user.input';
 import { UserModel } from './models/user.model';
-import { FindUsersInput } from './dto/get-users.input';
+import { FindUsersInput } from './inputs/get-users.input';
 import { buildWhere } from 'src/utility/input-types';
 import { JWT_HASH_SALT } from 'src/utility/conts';
 

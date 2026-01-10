@@ -7,8 +7,8 @@ import {
   Check,
   JoinColumn,
 } from 'typeorm';
-import { Expense } from 'src/expenses/expense.entity';
-import { User } from 'src/users/user.entity';
+import { Expense } from './expense.entity';
+import { User } from 'src/users/entities/user.entity';
 import { SplitValueType } from 'src/types/expense';
 
 @Entity({ name: 'splits' })

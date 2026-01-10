@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { DEFAULT_CURRENCY } from 'src/utility/conts';
 import { UserOnGroup } from './user-on-group.entity';
 

@@ -10,8 +10,7 @@ import {
   Check,
   JoinColumn,
 } from 'typeorm';
-import { User } from 'src/users/user.entity';
-// import { Group } from 'src/groups/group.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Split } from './split.entity';
 import { SplitType } from 'src/types/expense';
 import { DEFAULT_CURRENCY } from 'src/utility/conts';
