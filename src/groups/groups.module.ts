@@ -4,9 +4,10 @@ import { GroupsService } from './groups.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserOnGroup } from './entities/user-on-group.entity';
 import { Group } from './entities/group.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Group, UserOnGroup])],
+  imports: [TypeOrmModule.forFeature([Group, UserOnGroup, User])],
   exports: [TypeOrmModule],
   providers: [GroupsResolver, GroupsService],
 })

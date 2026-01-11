@@ -31,7 +31,7 @@ export class Group {
     onDelete: 'RESTRICT',
     nullable: false,
   })
-  @JoinColumn({ name: 'created_by' })
+  @JoinColumn({ name: 'created_by_id' })
   createdBy: User;
 
   @Column({

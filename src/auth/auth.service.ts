@@ -29,7 +29,7 @@ import { ConfigService } from '@nestjs/config';
 import { EmailService } from 'src/email/email.service';
 import _ from 'lodash';
 import { RestoreMeInput } from './inputs/restore-me.input';
-import { RequestMetaInput } from 'src/global/dto/request-meta.input';
+import { RequestMetaInput } from 'src/global/inputs/request-meta.input';
 import { UserRefreshToken } from 'src/users/entities/user-refresh-token.entity';
 @Injectable()
 export class AuthService {

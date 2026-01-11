@@ -24,6 +24,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { GraphQLError } from 'graphql';
 import { ExpensesModule } from './expenses/expenses.module';
 import { GroupsModule } from './groups/groups.module';
+import { IsAssetUrlConstraint } from './global/validators/is-asset-url.validator';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -92,6 +93,7 @@ import { GroupsModule } from './groups/groups.module';
     },
     EmailService,
     TasksService,
+    IsAssetUrlConstraint,
   ],
 })
 export class AppModule {}

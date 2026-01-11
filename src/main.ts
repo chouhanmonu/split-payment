@@ -7,6 +7,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   console.log(`App running in \x1b[34m${getEnvironment()}\x1b[0m environment`);
@@ -15,6 +16,12 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ trustProxy: true }),
   );
+
+  // tell class-validator to use Nest’s Dependency Injection container
+  useContainer(app.select(AppModule), {
+    fallbackOnErrors: true,
+  });
+
   app.useGlobalPipes(new ValidationPipe());
 
   const config = app.get(ConfigService);

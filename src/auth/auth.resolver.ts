@@ -11,9 +11,9 @@ import type { AppJwtPayload } from 'src/types/auth';
 import { Response } from 'src/utility/global.model';
 import { ResetPassordInput } from './inputs/reset-password.input';
 import { RestoreMeInput } from './inputs/restore-me.input';
-import { RequestMeta } from 'src/global/request-meta/request-meta.decorator';
-import { RequestMetaInput } from 'src/global/dto/request-meta.input';
-import { RequestMetaValidationPipe } from 'src/global/request-meta-validation/request-meta-validation.pipe';
+import { RequestMeta } from 'src/global/decorators/request-meta.decorator';
+import { RequestMetaInput } from 'src/global/inputs/request-meta.input';
+import { RequestMetaValidationPipe } from 'src/global/pipes/request-meta-validation.pipe';
 
 @Resolver()
 export class AuthResolver {

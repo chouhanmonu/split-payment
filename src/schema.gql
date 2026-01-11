@@ -13,6 +13,12 @@ input AddExpenseInput {
   splits: [SplitInput!]!
 }
 
+input AddGroupInput {
+  description: String
+  imageUrl: String
+  name: String!
+}
+
 input CreateUserInput {
   defaultCurrency: String
   email: String!
@@ -55,6 +61,26 @@ input FindUsersInput {
   where: UserWhereInput
 }
 
+type Group {
+  createdAt: DateTime!
+  createdBy: UserModel!
+  createdById: Float!
+  defaultCurrency: String!
+  deletedAt: DateTime
+  description: String
+  id: ID!
+  imageUrl: String
+  isArchived: Boolean!
+  members: [UserOnGroup!]!
+  name: String!
+  updatedAt: DateTime!
+}
+
+enum GroupRole {
+  ADMIN
+  MEMBER
+}
+
 input LoginInput {
   email: String!
   password: String!
@@ -69,6 +95,7 @@ type LoginResponse {
 
 type Mutation {
   addExpense(addExpenseInput: AddExpenseInput!): ExpenseModel!
+  addGroup(addGroupInput: AddGroupInput!): Group!
   createUser(newUserInput: CreateUserInput!): UserModel!
   deleteMe: Response!
   deleteUser(email: String!, password: String!): UserModel!
@@ -162,6 +189,15 @@ type UserModel {
   profilePictureUrl: String
   updatedAt: DateTime!
   userUid: String!
+}
+
+type UserOnGroup {
+  group: Group!
+  groupId: Float!
+  joinedAt: DateTime!
+  role: GroupRole!
+  user: UserModel!
+  userId: Float!
 }
 
 input UserOrderInput {

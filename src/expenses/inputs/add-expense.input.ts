@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Length,
   MaxLength,
   Min,
   ValidateNested,
@@ -61,6 +62,7 @@ export class AddExpenseInput {
   @Field({ defaultValue: DEFAULT_CURRENCY })
   @IsString()
   @IsOptional()
+  @Length(3, 3)
   currency?: string;
 
   @Field({ nullable: true })
