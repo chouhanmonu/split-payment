@@ -14,6 +14,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Split } from './split.entity';
 import { SplitType } from 'src/types/expense';
 import { DEFAULT_CURRENCY } from 'src/utility/conts';
+import { Group } from 'src/groups/entities/group.entity';
 
 @Entity('expenses')
 @Check(`"amount" > 0`)
@@ -37,9 +38,12 @@ export class Expense {
   @JoinColumn({ name: 'payer_id' })
   payer: User;
 
-  // @ManyToOne(() => Group, { nullable: true })
-  // @JoinColumn({ name: 'group_id' })
-  // group?: Group;
+  @ManyToOne(() => Group, (group) => group.expenses, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'group_id' })
+  group?: Group | null;
 
   @Column({
     name: 'split_type',

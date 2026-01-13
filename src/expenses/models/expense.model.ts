@@ -2,11 +2,15 @@ import { Field, Float, ID, ObjectType } from '@nestjs/graphql';
 import { SplitType } from 'src/types/expense';
 import { UserModel } from 'src/users/models/user.model';
 import { SplitModel } from './split.model';
+import { Group } from 'src/groups/models/group.model';
 
 @ObjectType()
 export class ExpenseModel {
   @Field(() => ID)
   id: number;
+
+  @Field(() => Group, { nullable: true })
+  group: Group;
 
   @Field()
   description: string;

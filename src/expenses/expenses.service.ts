@@ -12,12 +12,15 @@ import { User } from 'src/users/entities/user.entity';
 import { Split } from './entities/split.entity';
 import { SplitType, SplitValueType } from 'src/types/expense';
 import { getSplitsValueTotal } from 'src/utility/helpers';
+import { Group } from 'src/groups/entities/group.entity';
 @Injectable()
 export class ExpensesService {
   constructor(
     private readonly dataSource: DataSource,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Group)
+    private readonly groupRepository: Repository<Group>,
   ) {}
 
   async addExpense(
@@ -33,6 +36,14 @@ export class ExpensesService {
       id: addExpenseInput.payerId,
     });
     if (!payer) throw new NotFoundException('Payer not found');
+
+    let group: Group | null = null;
+    if (addExpenseInput.groupId != null) {
+      group = await this.groupRepository.findOneBy({
+        id: addExpenseInput.groupId,
+      });
+      if (!group) throw new NotFoundException('Group not found');
+    }
 
     const memberIds = addExpenseInput.splits.map((s) => s.memberId);
     const members = await this.userRepository.findBy({ id: In(memberIds) });
@@ -67,6 +78,7 @@ export class ExpensesService {
         ...addExpenseInput,
         payer,
         addedBy: user,
+        group,
         splits: undefined,
       });
       const savedExpense = await manager.save(expense);

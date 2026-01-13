@@ -43,11 +43,10 @@ export class AddExpenseInput {
   @IsNumber()
   payerId: number;
 
-  // Optional groupId if you uncomment the relation later
-  // @Field(() => Int, { nullable: true })
-  // @IsOptional()
-  // @IsNumber()
-  // groupId?: number;
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @IsNumber()
+  groupId?: number;
 
   @Field(() => SplitType, { defaultValue: SplitType.EQUAL })
   @IsEnum(SplitType)

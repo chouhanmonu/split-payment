@@ -6,6 +6,7 @@ input AddExpenseInput {
   amount: Float!
   currency: String! = "USD"
   description: String!
+  groupId: Int
   note: String
   payerId: Int!
   splitType: SplitType! = EQUAL
@@ -41,6 +42,7 @@ type ExpenseModel {
   currency: String!
   deletedAt: DateTime
   description: String!
+  group: Group
   id: ID!
   note: String
   payer: UserModel!
@@ -70,7 +72,6 @@ type Group {
   description: String
   id: ID!
   imageUrl: String
-  isArchived: Boolean!
   members: [UserOnGroup!]!
   name: String!
   updatedAt: DateTime!
@@ -106,6 +107,7 @@ type Mutation {
   restoreMe(restoreMeInput: RestoreMeInput!): Response!
   restoreUser(email: String!): UserModel!
   signUp(newUserInput: CreateUserInput!): UserModel!
+  updateGroup(updateGroupInput: UpdateGroupInput!): Group!
   updateUser(id: Float!, updateUserInput: UpdateUserInput!): UserModel!
 }
 
@@ -166,6 +168,13 @@ input StringFilter {
   in: [String!]
   notIn: [String!]
   startsWith: String
+}
+
+input UpdateGroupInput {
+  description: String
+  id: Int!
+  imageUrl: String
+  name: String!
 }
 
 input UpdateUserInput {
