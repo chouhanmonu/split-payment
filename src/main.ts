@@ -32,7 +32,8 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  await app.listen(process.env.PORT ?? 3000);
+  const port = config.get<string>('PORT');
+  await app.listen(port ? Number(port) : 3000);
 
   const appLogger = new Logger('App');
   appLogger.log(`App url: \x1b[34m${await app.getUrl()}\x1b[0m`);
