@@ -25,6 +25,8 @@ import { GraphQLError } from 'graphql';
 import { ExpensesModule } from './expenses/expenses.module';
 import { GroupsModule } from './groups/groups.module';
 import { IsAssetUrlConstraint } from './global/validators/is-asset-url.validator';
+import { join } from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -49,7 +51,7 @@ import { IsAssetUrlConstraint } from './global/validators/is-asset-url.validator
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       graphiql: true,
-      autoSchemaFile: 'src/schema.gql',
+      autoSchemaFile: join(process.cwd(), 'schema.gql'),
       sortSchema: true,
       formatError: (err: GraphQLError) => {
         const originalError = err.extensions.originalError as any;
