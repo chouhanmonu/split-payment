@@ -1,6 +1,9 @@
 Priority:
   ✔ use camelCase everywhere @done (09/01/2026, 08:33:35)
 
+Validations:
+  ☐ add max length to entities like input array size, no. of groups per user
+
 Security:
   ☐ Implement rate limiting
     move request device data to table `user_devices` from `user_refresh_tokens` and ...

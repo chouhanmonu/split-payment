@@ -49,7 +49,7 @@ export class ExpensesService {
     const members = await this.userRepository.findBy({ id: In(memberIds) });
 
     if (members.length !== memberIds.length) {
-      throw new BadRequestException('One or more split members not found.');
+      throw new BadRequestException('One or more split members not found');
     }
 
     if (addExpenseInput.splitType === SplitType.UNEQUAL) {

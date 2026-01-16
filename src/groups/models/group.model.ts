@@ -16,17 +16,8 @@ export class Group {
   @Field({ nullable: true })
   description?: string;
 
-  @Field()
-  createdById: number;
-
   @Field(() => UserModel)
   createdBy: UserModel;
-
-  @Field()
-  defaultCurrency: string;
-
-  @Field()
-  isArchived: boolean;
 
   @Field(() => [UserOnGroup])
   members: UserOnGroup[];

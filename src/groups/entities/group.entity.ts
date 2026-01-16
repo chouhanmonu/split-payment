@@ -10,8 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
-import { DEFAULT_CURRENCY } from 'src/utility/conts';
 import { UserOnGroup } from './user-on-group.entity';
+import { Expense } from 'src/expenses/entities/expense.entity';
 
 @Entity('groups')
 export class Group {
@@ -34,31 +34,18 @@ export class Group {
   @JoinColumn({ name: 'created_by_id' })
   createdBy: User;
 
-  @Column({
-    name: 'default_currency',
-    type: 'char',
-    length: 3,
-    default: DEFAULT_CURRENCY,
-  })
-  defaultCurrency: string;
-
-  @Column({ name: 'is_archived', default: false })
-  isArchived: boolean;
-
   @OneToMany(() => UserOnGroup, (uog) => uog.group)
   members: UserOnGroup[];
 
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',
-    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     name: 'updated_at',
     type: 'timestamptz',
-    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
   updatedAt: Date;
 
@@ -68,4 +55,7 @@ export class Group {
     nullable: true,
   })
   deletedAt?: Date;
+
+  @OneToMany(() => Expense, (expense) => expense.group)
+  expenses: Expense;
 }

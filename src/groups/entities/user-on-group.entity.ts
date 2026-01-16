@@ -12,20 +12,22 @@ import { GroupRole } from 'src/types/group';
 
 @Entity('users_on_groups')
 export class UserOnGroup {
-  @PrimaryColumn({ name: 'user_id' })
+  @PrimaryColumn({ name: 'user_id', type: 'int' })
   userId: number;
 
   @ManyToOne(() => User, (user) => user.groupMemberships, {
     onDelete: 'CASCADE',
+    nullable: false,
   })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @PrimaryColumn({ name: 'group_id' })
+  @PrimaryColumn({ name: 'group_id', type: 'int' })
   groupId: number;
 
   @ManyToOne(() => Group, (group) => group.members, {
     onDelete: 'CASCADE',
+    nullable: false,
   })
   @JoinColumn({ name: 'group_id' })
   group: Group;
@@ -34,13 +36,13 @@ export class UserOnGroup {
     type: 'enum',
     enum: GroupRole,
     default: GroupRole.MEMBER,
+    nullable: false,
   })
   role: GroupRole;
 
   @CreateDateColumn({
     name: 'joined_at',
     type: 'timestamptz',
-    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
   })
   joinedAt: Date;
 }

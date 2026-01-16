@@ -1,14 +1,14 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Group } from './group.model';
 import { UserModel } from 'src/users/models/user.model';
 import { GroupRole } from 'src/types/group';
 
 @ObjectType()
 export class UserOnGroup {
-  @Field()
+  @Field(() => ID)
   userId: number;
 
-  @Field()
+  @Field(() => ID)
   groupId: number;
 
   @Field(() => UserModel)
