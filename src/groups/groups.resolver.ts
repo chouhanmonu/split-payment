@@ -1,12 +1,11 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { Group } from './models/group.model';
+import { Group, GroupBasic } from './models/group.model';
 import { User } from 'src/auth/auth.decorator';
 import type { AppJwtPayload } from 'src/types/auth';
 import { AddGroupInput } from './inputs/add-group.input';
 import { GroupsService } from './groups.service';
 import { UpdateGroupInput } from './inputs/update-group.input';
 import { AddMembersInput } from './inputs/add-members.input';
-import { GroupBasic } from './models/group-basic.model';
 
 @Resolver()
 export class GroupsResolver {

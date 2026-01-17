@@ -57,11 +57,16 @@ export class GroupsService {
     addMembersInput: AddMembersInput,
     userPayload: AppJwtPayload,
   ) {
+    const user = await this.userRepository.findOneBy({
+      id: Number(userPayload.sub),
+    });
+    if (!user) throw new NotFoundException('User not found');
+
     const { groupId, members: memberIds } = addMembersInput;
 
     const group = await this.groupRepository.findOne({
       where: { id: groupId },
-      relations: ['members', 'createdBy'],
+      relations: ['members', 'members.user', 'members.group', 'createdBy'],
     });
     if (!group) throw new NotFoundException('Group not found');
 
@@ -75,9 +80,7 @@ export class GroupsService {
     const usersOnGroup = await this.userOnGroupRepository.findBy({
       groupId: group.id,
     });
-    const isUserMember = usersOnGroup.some(
-      (uog) => uog.userId === Number(userPayload.sub),
-    );
+    const isUserMember = usersOnGroup.some((uog) => uog.userId === user.id);
     if (!isUserMember)
       throw new BadRequestException('User not a member of the group');
 
@@ -86,8 +89,8 @@ export class GroupsService {
     );
     const usersOnGroupEntities = preppedMembers.map((user) =>
       this.userOnGroupRepository.create({
-        userId: user.id,
-        groupId: group.id,
+        user: user,
+        group: group,
         role: GroupRole.MEMBER,
       }),
     );

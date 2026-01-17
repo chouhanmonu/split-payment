@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType, OmitType } from '@nestjs/graphql';
 import { UserModel } from 'src/users/models/user.model';
 import { UserOnGroup } from './user-on-group.model';
 
@@ -31,3 +31,9 @@ export class Group {
   @Field({ nullable: true })
   deletedAt?: Date;
 }
+
+@ObjectType()
+export class GroupBasic extends OmitType(Group, [
+  'members',
+  'createdBy',
+] as const) {}
