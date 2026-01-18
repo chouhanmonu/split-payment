@@ -8,6 +8,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { useContainer } from 'class-validator';
+import { TypeOrmGraphqlFilter } from './global/filters/typeorm-graphql.filter';
 
 async function bootstrap() {
   console.log(`App running in \x1b[34m${getEnvironment()}\x1b[0m environment`);
@@ -23,6 +24,7 @@ async function bootstrap() {
   });
 
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new TypeOrmGraphqlFilter());
 
   const config = app.get(ConfigService);
   app.enableCors({
