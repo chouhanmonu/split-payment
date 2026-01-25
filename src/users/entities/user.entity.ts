@@ -53,6 +53,23 @@ export class User {
   })
   defaultCurrency: string;
 
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'timestamptz',
+    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'timestamptz',
+    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
+  })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
+  deletedAt: Date | null;
+
   @OneToMany(() => UserRefreshToken, (token) => token.user)
   refreshTokens: UserRefreshToken[];
 
@@ -70,21 +87,4 @@ export class User {
 
   @OneToMany(() => Group, (group) => group.createdBy)
   createdGroups: Group[];
-
-  @CreateDateColumn({
-    name: 'created_at',
-    type: 'timestamptz',
-    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
-  })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    name: 'updated_at',
-    type: 'timestamptz',
-    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
-  })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
-  deletedAt: Date | null;
 }

@@ -6,12 +6,14 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { UserOnGroup } from './user-on-group.entity';
 import { Expense } from 'src/expenses/entities/expense.entity';
+import { GroupInvite } from 'src/invites/entities/invite.entity';
 
 @Entity('groups')
 export class Group {
@@ -34,9 +36,6 @@ export class Group {
   @JoinColumn({ name: 'created_by_id' })
   createdBy: User;
 
-  @OneToMany(() => UserOnGroup, (uog) => uog.group)
-  members: UserOnGroup[];
-
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',
@@ -56,6 +55,12 @@ export class Group {
   })
   deletedAt?: Date;
 
+  @OneToMany(() => UserOnGroup, (uog) => uog.group)
+  members: UserOnGroup[];
+
   @OneToMany(() => Expense, (expense) => expense.group)
-  expenses: Expense;
+  expenses: Expense[];
+
+  @OneToOne(() => GroupInvite, (invite) => invite.group)
+  invite: GroupInvite;
 }

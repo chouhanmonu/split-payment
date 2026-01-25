@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType, OmitType } from '@nestjs/graphql';
 import { UserModel } from 'src/users/models/user.model';
 import { UserOnGroup } from './user-on-group.model';
+import { InviteBasic } from 'src/invites/models/invite.model';
 
 @ObjectType()
 export class Group {
@@ -37,3 +38,9 @@ export class GroupBasic extends OmitType(Group, [
   'members',
   'createdBy',
 ] as const) {}
+
+@ObjectType()
+export class GroupWithInvite extends Group {
+  @Field(() => InviteBasic)
+  invite: InviteBasic;
+}

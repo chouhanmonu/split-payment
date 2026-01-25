@@ -13,6 +13,7 @@ import { UpdateGroupInput } from './inputs/update-group.input';
 import { UserOnGroup } from './entities/user-on-group.entity';
 import { AddMembersInput } from './inputs/add-members.input';
 import { GroupRole } from 'src/types/group';
+import { InvitesService } from 'src/invites/invites.service';
 
 @Injectable()
 export class GroupsService {
@@ -24,6 +25,7 @@ export class GroupsService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(UserOnGroup)
     private readonly userOnGroupRepository: Repository<UserOnGroup>,
+    private readonly inviteService: InvitesService,
   ) {}
 
   async addGroup(addGroupInput: AddGroupInput, userPayload: AppJwtPayload) {
@@ -44,11 +46,17 @@ export class GroupsService {
         user: user,
         role: GroupRole.ADMIN,
       });
-
       const addedMembers = await manager.save(userOnGroupEntity);
+
+      const invite = await this.inviteService.inviteUsers(
+        manager,
+        addedGroup.id,
+      );
+
       return {
         ...addedGroup,
         members: [addedMembers],
+        invite,
       };
     });
   }

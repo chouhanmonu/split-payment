@@ -26,6 +26,7 @@ import { ExpensesModule } from './expenses/expenses.module';
 import { GroupsModule } from './groups/groups.module';
 import { IsAssetUrlConstraint } from './global/validators/is-asset-url.validator';
 import { join } from 'path';
+import { InvitesModule } from './invites/invites.module';
 
 @Module({
   imports: [
@@ -85,6 +86,7 @@ import { join } from 'path';
     AuthModule,
     ExpensesModule,
     GroupsModule,
+    InvitesModule,
   ],
   controllers: [AppController],
   providers: [

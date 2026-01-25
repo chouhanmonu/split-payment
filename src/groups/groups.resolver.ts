@@ -1,5 +1,5 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { Group, GroupBasic } from './models/group.model';
+import { Group, GroupBasic, GroupWithInvite } from './models/group.model';
 import { User } from 'src/auth/auth.decorator';
 import type { AppJwtPayload } from 'src/types/auth';
 import { AddGroupInput } from './inputs/add-group.input';
@@ -11,7 +11,7 @@ import { AddMembersInput } from './inputs/add-members.input';
 export class GroupsResolver {
   constructor(private readonly groupService: GroupsService) {}
 
-  @Mutation(() => Group)
+  @Mutation(() => GroupWithInvite)
   addGroup(
     @Args('addGroupInput') addGroupInput: AddGroupInput,
     @User() userPayload: AppJwtPayload,
