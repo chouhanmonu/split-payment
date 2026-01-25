@@ -48,7 +48,7 @@ export class GroupsService {
       });
       const addedMembers = await manager.save(userOnGroupEntity);
 
-      const invite = await this.inviteService.inviteUsers(
+      const invite = await this.inviteService.createInvite(
         manager,
         addedGroup.id,
       );
