@@ -14,12 +14,17 @@ import { UserModel } from './models/user.model';
 import { FindUsersInput } from './inputs/get-users.input';
 import { buildWhere } from 'src/utility/input-types';
 import { JWT_HASH_SALT } from 'src/utility/conts';
+import { AddFriendsInput } from './inputs/add-friends.input';
+import { AppJwtPayload } from 'src/types/auth';
+import { Friend } from './entities/friend.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Friend)
+    private readonly friendRepository: Repository<Friend>,
   ) {}
 
   static hashPassord(password: string) {
@@ -101,5 +106,20 @@ export class UsersService {
       throw new NotFoundException(`User with email ${email} not found`);
 
     return this.userRepository.recover(user);
+  }
+
+  async addFriends(
+    addFriendsInput: AddFriendsInput,
+    userPayload: AppJwtPayload,
+  ) {
+    const friendEntities = addFriendsInput.friends.map((friend) =>
+      this.friendRepository.create({
+        ...friend,
+        requesterId: Number(userPayload.sub),
+      }),
+    );
+    // continue: send mail to accept/block invite
+
+    return this.friendRepository.save(friendEntities);
   }
 }

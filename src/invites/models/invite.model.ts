@@ -6,8 +6,8 @@ export class Invite {
   @Field(() => ID)
   id: number;
 
-  @Field(() => ID, { nullable: false })
-  groupId: number | null;
+  @Field(() => ID)
+  groupId: number;
 
   @Field()
   token: string;

@@ -5,6 +5,10 @@ import { UserModel } from './models/user.model';
 import { CreateUserInput } from './inputs/create-user.input';
 import { UpdateUserInput } from './inputs/update-user.input';
 import { FindUsersInput } from './inputs/get-users.input';
+import { Friend } from './models/friend.model';
+import { AddFriendsInput } from './inputs/add-friends.input';
+import { User } from 'src/auth/auth.decorator';
+import type { AppJwtPayload } from 'src/types/auth';
 
 @Resolver(() => UserModel)
 export class UsersResolver {
@@ -44,5 +48,15 @@ export class UsersResolver {
   @Mutation(() => UserModel)
   restoreUser(@Args('email') email: string) {
     return this.usersService.restore(email);
+  }
+
+  @Mutation(() => [Friend])
+  addFriends(
+    @Args('addFriendsInput')
+    addFriendsInput: AddFriendsInput,
+    @User()
+    userPayload: AppJwtPayload,
+  ) {
+    return this.usersService.addFriends(addFriendsInput, userPayload);
   }
 }

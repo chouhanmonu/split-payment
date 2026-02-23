@@ -16,7 +16,7 @@ export class GroupInvite {
   id: number;
 
   @Column({ name: 'group_id', nullable: false, unique: true })
-  groupId: number | null;
+  groupId: number;
 
   @Column({ type: 'varchar', unique: true, length: 64, nullable: false })
   token: string;

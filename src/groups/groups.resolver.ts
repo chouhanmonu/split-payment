@@ -37,7 +37,7 @@ export class GroupsResolver {
 }
 
 // TODO: add members -> new, select from friends list -> notify the members added
-// new -> email, name -> add more -> notify
+// new -> email -> add more -> notify
 // ways to join: id, email, qr, link, generate new link
 // TODO: update group, leave group, delete group
 // admin: delete group, remove members

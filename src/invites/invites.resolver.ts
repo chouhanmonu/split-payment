@@ -1,7 +1,7 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { InvitesService } from './invites.service';
 import { UpdateTokenInput } from './inputs/update-token.input';
-import { Invite, InviteBasic } from './models/invite.model';
+import { InviteBasic } from './models/invite.model';
 import { User } from 'src/auth/auth.decorator';
 import type { AppJwtPayload } from 'src/types/auth';
 

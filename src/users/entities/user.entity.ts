@@ -14,6 +14,7 @@ import { DEFAULT_CURRENCY } from 'src/utility/conts';
 import { Split } from 'src/expenses/entities/split.entity';
 import { UserOnGroup } from 'src/groups/entities/user-on-group.entity';
 import { Group } from 'src/groups/entities/group.entity';
+import { Friend } from './friend.entity';
 
 @Entity('users')
 @Unique(['userUid'])
@@ -87,4 +88,10 @@ export class User {
 
   @OneToMany(() => Group, (group) => group.createdBy)
   createdGroups: Group[];
+
+  @OneToMany(() => Friend, (friend) => friend.requester)
+  sentFriendRequests: Friend[];
+
+  @OneToMany(() => Friend, (friend) => friend.addressee)
+  recievedFriendRequests: Friend[];
 }
